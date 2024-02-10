@@ -1,11 +1,11 @@
 import * as React from "react";
 
-export interface IHomePageProps {}
+import CreateRecipt from "@/components/CreateRecipt";
 
-export default function HomePage(props: IHomePageProps) {
+export default function HomePage() {
   return (
     <div>
-      <h1>Chaitanya Mohite the DON</h1>
+      <CreateRecipt />
     </div>
   );
 }
