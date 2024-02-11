@@ -2,8 +2,8 @@
 import { Box, Input } from "@chakra-ui/react";
 import * as React from "react";
 
-import { IRecordModel } from "@/app/record";
 import CustomTable from "@/components/table/CustomTable";
+import { IRecordModel } from "@/utils/types/be-model-types";
 let timer: ReturnType<typeof setTimeout>;
 
 export interface IAppProps {}

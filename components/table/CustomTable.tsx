@@ -2,7 +2,8 @@ import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { IRecordModel } from "../../app/record";
+import { IRecordModel } from "@/utils/types/be-model-types";
+
 import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
 
 interface Props {
