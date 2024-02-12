@@ -10,3 +10,17 @@ export interface IRecordModel {
   aadharNumber?: number;
   panNumber?: string;
 }
+
+// CreateReceipt FormData
+export interface IFormData {
+  reciptNumber: number;
+  email: string;
+  name: string;
+  year: number;
+  date: Date;
+  mobileNumber: number | null;
+  address: string;
+  amount: number;
+  aadharNumber: number | null;
+  panNumber: string;
+}

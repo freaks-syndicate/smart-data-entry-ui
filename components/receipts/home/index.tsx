@@ -1,7 +1,9 @@
 "use client";
-import { Box, Input } from "@chakra-ui/react";
+import { Box, Button, Input } from "@chakra-ui/react";
 import * as React from "react";
+import { BsFileEarmarkPlus } from "react-icons/bs";
 
+import CreateRecipt from "@/components/CreateRecipt";
 import CustomTable from "@/components/table/CustomTable";
 import { IRecordModel } from "@/utils/types/be-model-types";
 let timer: ReturnType<typeof setTimeout>;
@@ -70,6 +72,8 @@ export default function HomePageTemplate(props: IAppProps) {
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [filteredData, setFilteredData] =
     React.useState<IRecordModel[]>(initialData);
+  const [showCreateReceipt, setShowCreateReceipt] =
+    React.useState<boolean>(false);
 
   const debounceTime = 300;
 
@@ -102,21 +106,35 @@ export default function HomePageTemplate(props: IAppProps) {
     // Handle delete action here
     console.log("Delete record with id:", id);
   };
+
+  const toggleCreateReceipt = () => {
+    setShowCreateReceipt(!showCreateReceipt);
+  };
+
   return (
     <div className="container mx-auto">
-      <Box margin="20px" width="30%">
-        <Input
-          variant="outline"
-          placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-      </Box>
+      <div className="flex flex-row items-baseline justify-between">
+        <Box margin="20px" width="30%">
+          <Input
+            variant="outline"
+            placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </Box>
+
+        <Button colorScheme="green" onClick={toggleCreateReceipt}>
+          <BsFileEarmarkPlus />
+          Create Record
+        </Button>
+      </div>
       <CustomTable
         data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
+
+      {showCreateReceipt && <CreateRecipt />}
     </div>
   );
 }

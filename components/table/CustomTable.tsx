@@ -1,6 +1,8 @@
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 import { IRecordModel } from "@/utils/types/be-model-types";
 
@@ -74,7 +76,7 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
                     size="sm"
                     onClick={() => onEdit(record.uuid)}
                   >
-                    Edit
+                    <FaEdit />
                   </Button>
 
                   <Button
@@ -82,7 +84,7 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
                     size="sm"
                     onClick={() => handleDeleteClick(record.uuid)}
                   >
-                    Delete
+                    <MdDelete />
                   </Button>
                 </div>
               </Td>
