@@ -1,13 +1,13 @@
 import * as React from "react";
 
+import CreateRecipt from "@/components/CreateRecipt";
 import HomePageTemplate from "@/components/receipts/home";
 
-export interface IHomePageProps {}
-
-export default function HomePage(props: IHomePageProps) {
+export default function HomePage() {
   return (
     <div>
       <HomePageTemplate />
+      <CreateRecipt />
     </div>
   );
 }

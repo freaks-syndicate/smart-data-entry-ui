@@ -1,9 +1,7 @@
 import "./globals.css";
 
+import { ChakraProvider } from "@chakra-ui/react";
 import type { Metadata } from "next";
-
-import { fonts } from "./fonts";
-import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,14 +10,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" className={fonts.rubik.variable}>
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+    <html lang="en">
+      <ChakraProvider>
+        <body>{children}</body>
+      </ChakraProvider>
     </html>
   );
 }
