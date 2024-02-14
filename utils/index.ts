@@ -3,7 +3,7 @@ export interface IFormData {
   reciptNumber: number;
   email: string;
   name: string;
-  year: number;
+  year: number | null;
   date: Date;
   mobileNumber: number | null;
   address: string;

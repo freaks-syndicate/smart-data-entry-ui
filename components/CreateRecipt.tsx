@@ -22,7 +22,7 @@ const CreateRecipt: FC = () => {
 
   console.log("form data", formData);
   return (
-    <Center height="100vh" width="100vw" marginY={15}>
+    <Center width="100%" marginY={15}>
       <Box
         background="gray.50"
         borderRadius="md"

@@ -1,3 +1,6 @@
+"use client";
+
+import { AudioMutedOutlined, AudioOutlined } from "@ant-design/icons";
 import {
   Button,
   FormControl,
@@ -6,8 +9,9 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 
+import { useSpeechToText } from "@/hooks/useSpeechToText";
 import { IFormData } from "@/utils";
 
 interface formProps {
@@ -16,9 +20,29 @@ interface formProps {
 }
 
 const Form: FC<formProps> = ({ formData, setFormData }) => {
+  const [activeField, setActiveField] = useState<string | null>(null);
+  const { transcript, isListening, startListening, stopListening, error } =
+    useSpeechToText();
+
+  const [realTimeTranscript, setRealTimeTranscript] = useState("");
+  useEffect(() => {
+    // Update the real-time transcript display while listening
+    if (isListening) {
+      setRealTimeTranscript(transcript);
+    }
+  }, [transcript, isListening]);
+
+  // UseEffect to update formData based on transcript changes
+  useEffect(() => {
+    if (!isListening && activeField) {
+      setFormData((prev) => ({ ...prev, [activeField]: realTimeTranscript }));
+      setActiveField(null);
+      setRealTimeTranscript("");
+    }
+  }, [isListening, activeField, realTimeTranscript, setFormData]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
     setFormData((prev) => {
       if (name === "date") {
         // Parse the input string to a Date object
@@ -29,6 +53,28 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
       }
     });
   };
+
+  const handleSpeechClick = (fieldName: string) => {
+    setActiveField(fieldName);
+    isListening ? stopListening() : startListening();
+  };
+
+  const renderSpeechIcon = (fieldName: string) => {
+    return (
+      <Button
+        onClick={() => handleSpeechClick(fieldName)}
+        size="sm"
+        variant="ghost"
+      >
+        {isListening && activeField === fieldName ? (
+          <AudioOutlined />
+        ) : (
+          <AudioMutedOutlined />
+        )}
+      </Button>
+    );
+  };
+
   return (
     <>
       <Stack spacing={2} direction="column" align="center">
@@ -41,7 +87,7 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             onChange={handleChange}
           />
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Name</FormLabel>
           <Input
             type="test"
@@ -49,8 +95,11 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.name}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("name")}
+          </div>
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Amount</FormLabel>
           <Input
             type="number"
@@ -58,8 +107,11 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.amount}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("amount")}
+          </div>
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Mobile</FormLabel>
           <Input
             type="number"
@@ -68,8 +120,11 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.mobileNumber !== null ? formData.mobileNumber : ""}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("mobileNumber")}
+          </div>
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
@@ -78,9 +133,12 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.email}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("email")}
+          </div>
         </FormControl>
 
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Aadhar Number</FormLabel>
           <Input
             type="number"
@@ -90,8 +148,11 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.aadharNumber !== null ? formData.aadharNumber : ""}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("aadharNumber")}
+          </div>
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Pan Number</FormLabel>
           <Input
             type="string"
@@ -101,6 +162,9 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.panNumber}
             onChange={handleChange}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("panNumber")}
+          </div>
         </FormControl>
         <FormControl>
           <FormLabel>Year</FormLabel>
@@ -112,13 +176,18 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             onChange={handleChange}
           />
         </FormControl>
-        <FormControl>
+        <FormControl position="relative">
           <FormLabel>Address</FormLabel>
           <Textarea
             name="address"
             rows={4}
+            //value={formData.address}
+            //onChange={handleChange}
             placeholder="Enter your address here..."
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+            {renderSpeechIcon("address")}
+          </div>
         </FormControl>
 
         <Stack
