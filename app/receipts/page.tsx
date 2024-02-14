@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 
 const Page: FC = () => {
-  return <div>Recipt - Edit</div>;
+  // TODO: redirect to homepage
+  return <div>Recipt</div>;
 };
 
 export default Page;
