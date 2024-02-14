@@ -1,3 +1,4 @@
+"use client";
 import { Box, Button, Input } from "@chakra-ui/react";
 import * as React from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
