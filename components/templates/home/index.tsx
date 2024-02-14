@@ -1,5 +1,6 @@
 "use client";
 import { Box, Button, Input } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 
@@ -15,6 +16,8 @@ export interface IAppProps {
 
 export default function HomePageTemplate(props: IAppProps) {
   const { data: initialReceipts } = props;
+
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [filteredData, setFilteredData] =
@@ -55,7 +58,8 @@ export default function HomePageTemplate(props: IAppProps) {
   };
 
   const toggleCreateReceipt = () => {
-    setShowCreateReceipt(!showCreateReceipt);
+    // setShowCreateReceipt(!showCreateReceipt);
+    router.push("/create-receipt");
   };
 
   return (

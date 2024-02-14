@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const Footer = () => {
+  // TODO: Remove side margin
   return (
     <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4 border-t-[1px] border-gray-200">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
