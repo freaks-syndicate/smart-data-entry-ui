@@ -1,5 +1,5 @@
 "use client";
-import { Box, Center, Divider, Fade, Heading, Text } from "@chakra-ui/react";
+import { Box, Center, Heading, Text } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
 
 import { IFormData } from "@/utils";
