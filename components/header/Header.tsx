@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 
+// TODO: remove hydration errors
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

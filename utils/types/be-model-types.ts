@@ -1,4 +1,4 @@
-export interface IRecordModel {
+export interface IReceiptModel {
   uuid: string;
   receiptNumber: number;
   year?: number;

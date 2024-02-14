@@ -4,12 +4,12 @@ import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-import { IRecordModel } from "@/utils/types/be-model-types";
+import { IReceiptModel } from "@/utils/types/be-model-types";
 
 import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
 
 interface Props {
-  data: IRecordModel[];
+  data: IReceiptModel[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
