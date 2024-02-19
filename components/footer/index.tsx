@@ -1,7 +1,8 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 const Footer = () => {
+  // TODO: Remove side margin
   return (
     <div className="bg-white rounded-lg shadow dark:bg-gray-900 mt-4 border-t-[1px] border-gray-200">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
