@@ -18,11 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ChakraProvider>
-        <Nav />
-        <body className="pt-16">{children}</body>
-        <Footer />
-      </ChakraProvider>
+      <head>
+        <title>Donation</title>
+      </head>
+      <body className="pt-16">
+        <ChakraProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </ChakraProvider>
+      </body>
     </html>
   );
 }

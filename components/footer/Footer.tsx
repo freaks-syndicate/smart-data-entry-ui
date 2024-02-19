@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4 border-t-[1px] border-gray-200">
+    <div className="bg-white rounded-lg shadow dark:bg-gray-900 mt-4 border-t-[1px] border-gray-200">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a
@@ -52,7 +52,7 @@ const Footer = () => {
           . All Rights Reserved.
         </span>
       </div>
-    </footer>
+    </div>
   );
 };
 
