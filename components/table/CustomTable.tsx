@@ -64,20 +64,42 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
                   : "-"}
               </Td>
               <Td>{record.mobileNumber}</Td>
-              <Td>{record.name}</Td>
-              <Td>{record.address}</Td>
+              <Td
+                style={{
+                  maxWidth: "200px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={record.name}
+              >
+                {record.name}
+              </Td>
+              <Td
+                style={{
+                  maxWidth: "200px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={record.address}
+              >
+                {record.address}
+              </Td>
               <Td>{record.amount}</Td>
               <Td>{record.aadharNumber}</Td>
               <Td>{record.panNumber}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <Button
-                    colorScheme="blue"
-                    size="sm"
-                    onClick={() => onEdit(record.uuid)}
-                  >
-                    <FaEdit />
-                  </Button>
+                  <Link href={`/receipts/edit/${record.uuid}`}>
+                    <Button
+                      colorScheme="blue"
+                      size="sm"
+                      onClick={() => onEdit(record.uuid)}
+                    >
+                      <FaEdit />
+                    </Button>
+                  </Link>
 
                   <Button
                     colorScheme="red"
