@@ -6,12 +6,16 @@ type SpeechToTextResult = {
   startListening: () => void;
   stopListening: () => void;
   error: string | null;
+  setSpeechLanguage: (newLanguage: string) => void;
 };
 
-export const useSpeechToText = (): SpeechToTextResult => {
+export const useSpeechToText = (
+  initialLanguage: string = "en-US",
+): SpeechToTextResult => {
   const [transcript, setTranscript] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState(initialLanguage);
 
   useEffect(() => {
     if (
@@ -26,6 +30,7 @@ export const useSpeechToText = (): SpeechToTextResult => {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
 
+    recognition.lang = language;
     recognition.continuous = true; // Keep listening even after the user stops speaking
     recognition.interimResults = true; // Show intermediate results
 
@@ -47,10 +52,21 @@ export const useSpeechToText = (): SpeechToTextResult => {
     }
 
     return () => recognition.stop();
-  }, [isListening]);
+  }, [isListening, language]);
 
   const startListening = () => setIsListening(true);
   const stopListening = () => setIsListening(false);
 
-  return { transcript, isListening, startListening, stopListening, error };
+  const setSpeechLanguage = (newLanguage: string) => {
+    setLanguage(newLanguage);
+  };
+
+  return {
+    transcript,
+    isListening,
+    startListening,
+    stopListening,
+    error,
+    setSpeechLanguage,
+  };
 };

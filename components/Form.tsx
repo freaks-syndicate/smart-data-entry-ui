@@ -21,27 +21,39 @@ interface formProps {
 
 const Form: FC<formProps> = ({ formData, setFormData }) => {
   const [activeField, setActiveField] = useState<string | null>(null);
-  const { transcript, isListening, startListening, stopListening, error } =
-    useSpeechToText();
+  const {
+    transcript,
+    isListening,
+    startListening,
+    stopListening,
+    error,
+    setSpeechLanguage,
+  } = useSpeechToText();
 
   const [realTimeTranscript, setRealTimeTranscript] = useState("");
+
   useEffect(() => {
+    if (activeField === "name" || activeField === "address") {
+      setSpeechLanguage("mr-IN");
+    } else {
+      setSpeechLanguage("en-US");
+    }
     // Update the real-time transcript display while listening
-    if (isListening) {
+    if (isListening && activeField !== null) {
       setRealTimeTranscript(transcript);
-    }
-  }, [transcript, isListening]);
-
-  // UseEffect to update formData based on transcript changes
-  useEffect(() => {
-    if (!isListening && activeField) {
       setFormData((prev) => ({ ...prev, [activeField]: realTimeTranscript }));
-      setActiveField(null);
-      setRealTimeTranscript("");
     }
-  }, [isListening, activeField, realTimeTranscript, setFormData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transcript, isListening, realTimeTranscript, setFormData]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    setRealTimeTranscript("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeField]);
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = event.target;
     setFormData((prev) => {
       if (name === "date") {
@@ -55,6 +67,7 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
   };
 
   const handleSpeechClick = (fieldName: string) => {
+    setRealTimeTranscript("");
     setActiveField(fieldName);
     isListening ? stopListening() : startListening();
   };
@@ -107,9 +120,9 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
             value={formData.amount}
             onChange={handleChange}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
+          {/*<div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
             {renderSpeechIcon("amount")}
-          </div>
+          </div>*/}
         </FormControl>
         <FormControl position="relative">
           <FormLabel>Mobile</FormLabel>
@@ -141,7 +154,7 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
         <FormControl position="relative">
           <FormLabel>Aadhar Number</FormLabel>
           <Input
-            type="number"
+            type="string"
             name="aadharNumber"
             placeholder="1234 - 1234 - 1234 - 1234"
             maxLength={12}
@@ -181,8 +194,8 @@ const Form: FC<formProps> = ({ formData, setFormData }) => {
           <Textarea
             name="address"
             rows={4}
-            //value={formData.address}
-            //onChange={handleChange}
+            value={formData.address}
+            onChange={handleChange}
             placeholder="Enter your address here..."
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">

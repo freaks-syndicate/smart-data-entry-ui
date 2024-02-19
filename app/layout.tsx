@@ -19,11 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
-        <Nav />
-        <body className="pt-16">{children}</body>
-        <Footer />
-      </Providers>
+      <head>
+        <title>Donation</title>
+      </head>
+      <body className="pt-16">
+        <Providers>
+          <Nav />
+          {children}
+          <Footer />
+        </Providers>
+      </body>
     </html>
   );
 }
