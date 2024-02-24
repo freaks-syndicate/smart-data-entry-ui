@@ -1,8 +1,7 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
-const Page: FC = () => {
+const Page: FC = () => (
   // TODO: redirect to homepage
-  return <div>Recipt</div>;
-};
-
+  <div>Recipt</div>
+);
 export default Page;

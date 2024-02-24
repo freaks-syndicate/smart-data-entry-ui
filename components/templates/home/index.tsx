@@ -1,29 +1,29 @@
-"use client";
-import { Box, Button, Input } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import * as React from "react";
-import { BsFileEarmarkPlus } from "react-icons/bs";
+'use client';
+import { Box, Button, Input } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+import { BsFileEarmarkPlus } from 'react-icons/bs';
 
-import CreateRecipt from "@/components/CreateRecipt";
-import CustomTable from "@/components/table/CustomTable";
-import { IReceiptModel } from "@/utils/types/be-model-types";
+import CreateRecipt from '@/components/CreateRecipt';
+import CustomTable from '@/components/table/CustomTable';
+import { IReceiptModel } from '@/utils/types/be-model-types';
 
 let timer: ReturnType<typeof setTimeout>;
 
 export interface IAppProps {
-  data: IReceiptModel[];
+  receipts: IReceiptModel[];
 }
 
 export default function HomePageTemplate(props: IAppProps) {
-  const { data: initialReceipts } = props;
+  const { receipts: initialReceipts } = props;
 
   const router = useRouter();
 
-  const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [filteredData, setFilteredData] =
-    React.useState<IReceiptModel[]>(initialReceipts);
-  const [showCreateReceipt, setShowCreateReceipt] =
-    React.useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [filteredData, setFilteredData] = React.useState<IReceiptModel[]>(initialReceipts);
+  // TODO: remove the below comment when refactoring, supresing the error temporarily
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [showCreateReceipt, setShowCreateReceipt] = React.useState<boolean>(false);
 
   const debounceTime = 300;
 
@@ -39,27 +39,25 @@ export default function HomePageTemplate(props: IAppProps) {
       (record) =>
         record.name.toLowerCase().includes(query.toLowerCase()) ||
         record.receiptNumber.toString().includes(query.toLowerCase()) ||
-        (record.aadharNumber &&
-          record.aadharNumber.toString().includes(query.toLowerCase())) ||
-        (record.panNumber &&
-          record.panNumber.toLowerCase().includes(query.toLowerCase())),
+        (record.aadharNumber && record.aadharNumber.toString().includes(query.toLowerCase())) ||
+        (record.panNumber && record.panNumber.toLowerCase().includes(query.toLowerCase())),
     );
     setFilteredData(filteredData);
   };
 
   const handleEdit = (id: string) => {
     // Handle edit action here
-    console.log("Edit record with id:", id);
+    console.log('Edit record with id:', id);
   };
 
   const handleDelete = (id: string) => {
     // Handle delete action here
-    console.log("Delete record with id:", id);
+    console.log('Delete record with id:', id);
   };
 
   const toggleCreateReceipt = () => {
     // setShowCreateReceipt(!showCreateReceipt);
-    router.push("/create-receipt");
+    router.push('/create-receipt');
   };
 
   return (
@@ -74,16 +72,13 @@ export default function HomePageTemplate(props: IAppProps) {
           />
         </Box>
 
+        {/* TODO: If need to redirect on a diff page, use <Link /> component instead */}
         <Button colorScheme="green" onClick={toggleCreateReceipt}>
           <BsFileEarmarkPlus />
           Create Record
         </Button>
       </div>
-      <CustomTable
-        data={filteredData}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <CustomTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
 
       {showCreateReceipt && <CreateRecipt />}
     </div>

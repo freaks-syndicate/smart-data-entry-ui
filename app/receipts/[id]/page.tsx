@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import ReceiptViewTemplate from "@/components/templates/receipts/view";
+import ReceiptViewTemplate from '@/components/templates/receipts/view';
 
 export interface IReceiptsViewPageProps {}
 

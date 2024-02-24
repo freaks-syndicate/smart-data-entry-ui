@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type SpeechToTextResult = {
   transcript: string;
@@ -9,25 +9,19 @@ type SpeechToTextResult = {
   setSpeechLanguage: (newLanguage: string) => void;
 };
 
-export const useSpeechToText = (
-  initialLanguage: string = "en-US",
-): SpeechToTextResult => {
-  const [transcript, setTranscript] = useState("");
+export const useSpeechToText = (initialLanguage: string = 'en-US'): SpeechToTextResult => {
+  const [transcript, setTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState(initialLanguage);
 
   useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      (!window.SpeechRecognition && !window.webkitSpeechRecognition)
-    ) {
-      setError("Speech recognition is not supported in this browser.");
+    if (typeof window === 'undefined' || (!window.SpeechRecognition && !window.webkitSpeechRecognition)) {
+      setError('Speech recognition is not supported in this browser.');
       return;
     }
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
 
     recognition.lang = language;
@@ -37,7 +31,7 @@ export const useSpeechToText = (
     recognition.onresult = (event) => {
       const currentTranscript = Array.from(event.results)
         .map((result) => result[0].transcript)
-        .join("");
+        .join('');
       setTranscript(currentTranscript);
     };
 

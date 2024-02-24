@@ -1,12 +1,12 @@
-import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import Link from "next/link";
-import { useState } from "react";
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 
-import { IReceiptModel } from "@/utils/types/be-model-types";
+import { IReceiptModel } from '@/utils/types/be-model-types';
 
-import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
+import DeleteConfirmationModal from '../modal/DeleteConfirmationModal';
 
 interface Props {
   data: IReceiptModel[];
@@ -48,28 +48,18 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
         </Thead>
         <Tbody>
           {data.map((record) => (
-            <Tr
-              key={record.uuid}
-              _hover={{ bg: "gray.100" }}
-              transition="background 0.3s ease"
-            >
+            <Tr key={record.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
-                <Link href={`/receipts/${record.receiptNumber}`}>
-                  {record.receiptNumber}
-                </Link>
+                <Link href={`/receipts/${record.receiptNumber}`}>{record.receiptNumber}</Link>
               </Td>
-              <Td>
-                {record.date
-                  ? new Date(record.date).toLocaleDateString("en-US")
-                  : "-"}
-              </Td>
+              <Td>{record.date ? new Date(record.date).toLocaleDateString('en-US') : '-'}</Td>
               <Td>{record.mobileNumber}</Td>
               <Td
                 style={{
-                  maxWidth: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  maxWidth: '200px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
                 title={record.name}
               >
@@ -77,10 +67,10 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
               </Td>
               <Td
                 style={{
-                  maxWidth: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  maxWidth: '200px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
                 title={record.address}
               >
@@ -92,20 +82,12 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
               <Td>
                 <div className="flex gap-2">
                   <Link href={`/receipts/edit/${record.uuid}`}>
-                    <Button
-                      colorScheme="blue"
-                      size="sm"
-                      onClick={() => onEdit(record.uuid)}
-                    >
+                    <Button colorScheme="blue" size="sm" onClick={() => onEdit(record.uuid)}>
                       <FaEdit />
                     </Button>
                   </Link>
 
-                  <Button
-                    colorScheme="red"
-                    size="sm"
-                    onClick={() => handleDeleteClick(record.uuid)}
-                  >
+                  <Button colorScheme="red" size="sm" onClick={() => handleDeleteClick(record.uuid)}>
                     <MdDelete />
                   </Button>
                 </div>
@@ -115,11 +97,7 @@ const CustomTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
         </Tbody>
       </Table>
 
-      <DeleteConfirmationModal
-        isOpen={!!recordToDelete}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-      />
+      <DeleteConfirmationModal isOpen={!!recordToDelete} onClose={handleDeleteCancel} onConfirm={handleDeleteConfirm} />
     </Box>
   );
 };
