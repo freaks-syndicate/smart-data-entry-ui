@@ -3,7 +3,7 @@ import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import { client } from '@/apollo/client.mjs';
-import { SupertokensProvider } from '@/components/supertokens-provider';
+import { SupertokensProvider } from '@/components/auth/supertokens-provider';
 
 export interface IProvidersProps {
   children: React.ReactNode;

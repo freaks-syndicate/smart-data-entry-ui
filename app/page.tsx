@@ -1,5 +1,4 @@
 import { ApolloQueryResult } from '@apollo/client';
-import * as React from 'react';
 
 import { client } from '@/apollo/client.mjs';
 import HomePageTemplate from '@/components/templates/home';
@@ -12,7 +11,6 @@ export default async function HomePage() {
   });
 
   const receipts = data?.data?.receipts ?? [];
-
   return (
     <div>
       <HomePageTemplate receipts={receipts} />
