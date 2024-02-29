@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { SuperTokensConfig } from 'supertokens-auth-react/lib/build/types';
-import Session from 'supertokens-auth-react/recipe/session';
-import ThirdPartyEmailPassword, { Apple, Github, Google } from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
+import SessionReact from 'supertokens-auth-react/recipe/session';
+import ThirdPartyEmailPasswordReact from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
 
 import { appInfo } from './app-info';
 
@@ -12,20 +12,25 @@ export function setRouter(router: ReturnType<typeof useRouter>, pathName: string
   routerInfo.pathName = pathName;
 }
 
+// Learn more: https://supertokens.com/docs/thirdpartyemailpassword/nextjs/app-directory/init
 export const frontendConfig = (): SuperTokensConfig => ({
   appInfo,
   recipeList: [
-    ThirdPartyEmailPassword.init({
+    ThirdPartyEmailPasswordReact.init({
       signInAndUpFeature: {
-        providers: [Google.init(), Github.init(), Apple.init()],
+        providers: [
+          ThirdPartyEmailPasswordReact.Google.init(),
+          ThirdPartyEmailPasswordReact.Github.init(),
+          ThirdPartyEmailPasswordReact.Apple.init(),
+        ],
       },
     }),
-    Session.init(),
+    SessionReact.init(),
   ],
-  windowHandler: (orig) => ({
-    ...orig,
+  windowHandler: (original) => ({
+    ...original,
     location: {
-      ...orig.location,
+      ...original.location,
       getPathName: () => routerInfo.pathName!,
       assign: (url) => routerInfo.router!.push(url.toString()),
       setHref: (url) => routerInfo.router!.push(url.toString()),
