@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 
+import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import CreateRecipt from '@/components/CreateRecipt';
 import CustomTable from '@/components/table/CustomTable';
 import { IReceiptModel } from '@/utils/types/be-model-types';
@@ -61,26 +62,28 @@ export default function HomePageTemplate(props: IAppProps) {
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="flex flex-row items-baseline justify-between">
-        <Box margin="20px" width="30%">
-          <Input
-            variant="outline"
-            placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </Box>
+    <CustomSessionAuth>
+      <div className="container mx-auto">
+        <div className="flex flex-row items-baseline justify-between">
+          <Box margin="20px" width="30%">
+            <Input
+              variant="outline"
+              placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </Box>
 
-        {/* TODO: If need to redirect on a diff page, use <Link /> component instead */}
-        <Button colorScheme="green" onClick={toggleCreateReceipt}>
-          <BsFileEarmarkPlus />
-          Create Record
-        </Button>
+          {/* TODO: If need to redirect on a diff page, use <Link /> component instead */}
+          <Button colorScheme="green" onClick={toggleCreateReceipt}>
+            <BsFileEarmarkPlus />
+            Create Record
+          </Button>
+        </div>
+        <CustomTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+
+        {showCreateReceipt && <CreateRecipt />}
       </div>
-      <CustomTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
-
-      {showCreateReceipt && <CreateRecipt />}
-    </div>
+    </CustomSessionAuth>
   );
 }

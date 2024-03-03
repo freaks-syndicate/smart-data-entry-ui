@@ -6,7 +6,7 @@ export const GET_RECEIPTS_ALL = gql`
       id
       uuid
       receiptNumber
-      year
+      financialYear
       date
       mobileNumber
       name

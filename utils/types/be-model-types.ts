@@ -24,3 +24,15 @@ export interface IFormData {
   aadharNumber: number | null;
   panNumber: string;
 }
+
+export interface IUserInfo {
+  userId: string;
+  firstName?: string;
+  lastName?: string;
+  roles?: IUserRole[];
+}
+
+export interface IUserRole {
+  name: string;
+  permissions: string[];
+}
