@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Donation</title>
+        <title>Smart Data Entry</title>
       </head>
       <body className="pt-16">
         <Providers>
