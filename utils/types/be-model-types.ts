@@ -1,4 +1,5 @@
 export interface IReceiptBookModel {
+  id: string;
   financialYear?: string;
   receiptBookNumber: number;
   receiptSeries: number;
@@ -15,6 +16,7 @@ export enum ModeOfPayment {
 }
 
 export interface IReceiptModel {
+  id: string;
   uuid: string;
   receiptNumber: number;
   financialYear?: number;
