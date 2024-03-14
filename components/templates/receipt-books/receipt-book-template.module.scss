@@ -1,0 +1,12 @@
+.d-container {
+  @apply container;
+  @apply mx-auto;
+  @apply min-h-[calc(100vh-262px)];
+  @apply pt-5;
+  &__search-cta {
+    @apply flex;
+    @apply flex-row;
+    @apply items-baseline;
+    @apply justify-between;
+  }
+}

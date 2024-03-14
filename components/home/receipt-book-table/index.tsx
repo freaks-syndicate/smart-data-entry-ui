@@ -12,8 +12,11 @@ export interface IReceiptBookTableProps {
 }
 
 export default function ReceiptBookTable(props: IReceiptBookTableProps) {
-  const receiptBooks = props.receiptBooks;
+  const { receiptBooks: initialReceiptBooks } = props;
 
+  // TODO: Remove this comment after resolving the warning
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [receiptBooks, setReceiptBooks] = useState<IReceiptBookModel[]>(initialReceiptBooks);
   const [recordToDelete, setRecordToDelete] = useState<number | null>(null);
 
   const handleDelete = (receiptBookNumber: IReceiptBookModel['receiptBookNumber']) => {
