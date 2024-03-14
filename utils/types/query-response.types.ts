@@ -1,4 +1,4 @@
-import { IReceiptBookModel, IReceiptModel, IUserInfo, ModeOfPayment } from './be-model-types';
+import { IReceiptBookModel, IReceiptModel, IUserInfo, ModeOfPayment } from '@/utils/types/be-model-types';
 
 // Page Related
 export interface IPageInfo {
@@ -28,6 +28,10 @@ export interface ICreateReceiptBookArgs {
   };
 }
 
+export interface ICreateReceiptBookResponse {
+  createdReceiptBook: IReceiptBookModel;
+}
+
 export interface IUpdateReceiptBookArgs {
   id: string;
   item: {
@@ -38,8 +42,16 @@ export interface IUpdateReceiptBookArgs {
   };
 }
 
+export interface IUpdateReceiptBookResponse {
+  updatedReceiptBook: IReceiptBookModel;
+}
+
 export interface IDeleteReceiptBookArgs {
   id: string;
+}
+
+export interface IDeleteReceiptBookResponse {
+  deletedReceiptBook: IReceiptBookModel;
 }
 
 // Receipts
@@ -63,6 +75,10 @@ export interface ICreateReceiptArgs {
   };
 }
 
+export interface ICreateReceiptResponse {
+  createdReceipt: IReceiptModel;
+}
+
 export interface IUpdateReceiptArgs {
   id: string;
   item: {
@@ -80,8 +96,16 @@ export interface IUpdateReceiptArgs {
   };
 }
 
+export interface IUpdateReceiptResponse {
+  updatedReceipt: IReceiptModel;
+}
+
 export interface IDeleteReceiptArgs {
   id: string;
+}
+
+export interface IDeleteReceiptResponse {
+  deletedReceipt: IReceiptModel;
 }
 
 // User
