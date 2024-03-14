@@ -8,6 +8,12 @@ export interface IReceiptBookModel {
   uuid: string;
 }
 
+export enum ModeOfPayment {
+  cash,
+  cheque,
+  online,
+}
+
 export interface IReceiptModel {
   uuid: string;
   receiptNumber: number;
@@ -19,6 +25,7 @@ export interface IReceiptModel {
   amount: number;
   aadharNumber?: number;
   panNumber?: string;
+  modeOfPayment: ModeOfPayment;
 }
 
 // CreateReceipt FormData
