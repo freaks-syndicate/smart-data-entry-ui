@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -5,7 +6,9 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
+import { DELETE_RECEIPT_BOOK } from '@/queries/receipt-book/delete-receipt-book';
 import { IReceiptBookModel } from '@/utils/types/be-model-types';
+import { IDeleteReceiptBookResponse } from '@/utils/types/query-response.types';
 
 export interface IReceiptBookTableProps {
   receiptBooks: IReceiptBookModel[];
@@ -14,18 +17,23 @@ export interface IReceiptBookTableProps {
 export default function ReceiptBookTable(props: IReceiptBookTableProps) {
   const { receiptBooks: initialReceiptBooks } = props;
 
-  // TODO: Remove this comment after resolving the warning
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [receiptBooks, setReceiptBooks] = useState<IReceiptBookModel[]>(initialReceiptBooks);
-  const [recordToDelete, setRecordToDelete] = useState<number | null>(null);
+  const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
-  const handleDelete = (receiptBookNumber: IReceiptBookModel['receiptBookNumber']) => {
-    setRecordToDelete(receiptBookNumber);
+  const [deleteReceiptBook, { loading, error }] = useMutation<IDeleteReceiptBookResponse>(DELETE_RECEIPT_BOOK);
+
+  const handleDelete = (receiptBookId: IReceiptBookModel['id']) => {
+    setRecordToDelete(receiptBookId);
   };
 
   const handleDeleteConfirm = () => {
     if (recordToDelete) {
-      // TODO: Delete record action
+      deleteReceiptBook({
+        variables: { id: recordToDelete },
+        onCompleted: () => {
+          setReceiptBooks((currentReceiptBooks) => currentReceiptBooks.filter((receiptBook) => receiptBook.id !== recordToDelete));
+        },
+      });
       setRecordToDelete(null);
     }
   };
@@ -33,6 +41,10 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
   const handleDeleteCancel = () => {
     setRecordToDelete(null);
   };
+
+  // TODO: Gracefully handle UI for loading and error states
+  if (loading) return 'Deleting Receipt Book...';
+  if (error) return `Deletion error! ${error.message}`;
 
   return (
     <Box margin="5" borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -66,7 +78,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
                     </Button>
                   </Link>
 
-                  <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.receiptBookNumber)}>
+                  <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)}>
                     <MdDelete />
                   </Button>
                 </div>
