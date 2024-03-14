@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_RECEIPT_BOOKS = gql`
   query ReceiptBooks($paginate: PaginationInput, $where: WhereOptionsReceiptBook) {
-    ReceiptBooks(paginate: $paginate, where: $where) {
+    receiptBooks: ReceiptBooks(paginate: $paginate, where: $where) {
       results {
         id
         uuid

@@ -1,19 +1,20 @@
 import { ApolloQueryResult } from '@apollo/client';
 
 import { client } from '@/apollo/client.mjs';
-import HomePageTemplate from '@/components/templates/home';
-import { GET_RECEIPTS_ALL } from '@/queries/receipt/get-receipts-all';
-import { InputGetReceiptsAllResponse } from '@/utils/types/query-response.types';
+import ReceiptBooksTemplate from '@/components/templates/receipt-books';
+import { GET_RECEIPT_BOOKS } from '@/queries/receipt-book/get-receipt-books';
+import { IGetReceiptBooksResponse } from '@/utils/types/query-response.types';
 
 export default async function HomePage() {
-  const data: ApolloQueryResult<InputGetReceiptsAllResponse> = await client.query({
-    query: GET_RECEIPTS_ALL,
+  const data: ApolloQueryResult<IGetReceiptBooksResponse> = await client.query({
+    query: GET_RECEIPT_BOOKS,
   });
 
-  const receipts = data?.data?.receipts ?? [];
+  const receiptBooks = data?.data?.receiptBooks.results ?? [];
+
   return (
     <div>
-      <HomePageTemplate receipts={receipts} />
+      <ReceiptBooksTemplate receiptBooks={receiptBooks} />
     </div>
   );
 }
