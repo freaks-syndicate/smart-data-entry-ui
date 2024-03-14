@@ -1,3 +1,13 @@
+export interface IReceiptBookModel {
+  financialYear?: string;
+  receiptBookNumber: number;
+  receiptSeries: number;
+  receipts?: IReceiptModel[];
+  totalReceipts: number;
+  usedReceipts: number;
+  uuid: string;
+}
+
 export interface IReceiptModel {
   uuid: string;
   receiptNumber: number;
