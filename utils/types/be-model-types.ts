@@ -11,7 +11,7 @@ export interface IReceiptBookModel {
 export interface IReceiptModel {
   uuid: string;
   receiptNumber: number;
-  year?: number;
+  financialYear?: number;
   date?: string;
   mobileNumber?: number;
   name: string;
@@ -26,7 +26,7 @@ export interface IFormData {
   reciptNumber: number;
   email: string;
   name: string;
-  year: number;
+  financialYear: number;
   date: Date;
   mobileNumber: number | null;
   address: string;
