@@ -6,11 +6,11 @@ import { GET_RECEIPT_BOOKS } from '@/queries/receipt-book/get-receipt-books';
 import { IGetReceiptBooksResponse } from '@/utils/types/query-response.types';
 
 export default async function HomePage() {
-  const data: ApolloQueryResult<IGetReceiptBooksResponse> = await client.query({
+  const receiptBooksResponse: ApolloQueryResult<IGetReceiptBooksResponse> = await client.query({
     query: GET_RECEIPT_BOOKS,
   });
 
-  const receiptBooks = data?.data?.receiptBooks.results ?? [];
+  const receiptBooks = receiptBooksResponse?.data?.receiptBooks.results ?? [];
 
   return (
     <div>

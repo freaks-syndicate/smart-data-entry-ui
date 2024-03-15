@@ -8,7 +8,7 @@ import { MdDelete } from 'react-icons/md';
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
 import { DELETE_RECEIPT_BOOK } from '@/queries/receipt-book/delete-receipt-book';
 import { IReceiptBookModel } from '@/utils/types/be-model-types';
-import { IDeleteReceiptBookResponse } from '@/utils/types/query-response.types';
+import { IDeleteReceiptBookArgs, IDeleteReceiptBookResponse } from '@/utils/types/query-response.types';
 
 export interface IReceiptBookTableProps {
   receiptBooks: IReceiptBookModel[];
@@ -20,7 +20,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
   const [receiptBooks, setReceiptBooks] = useState<IReceiptBookModel[]>(initialReceiptBooks);
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
-  const [deleteReceiptBook, { loading, error }] = useMutation<IDeleteReceiptBookResponse>(DELETE_RECEIPT_BOOK);
+  const [deleteReceiptBook, { loading, error }] = useMutation<IDeleteReceiptBookResponse, IDeleteReceiptBookArgs>(DELETE_RECEIPT_BOOK);
 
   const handleDelete = (receiptBookId: IReceiptBookModel['id']) => {
     setRecordToDelete(receiptBookId);
