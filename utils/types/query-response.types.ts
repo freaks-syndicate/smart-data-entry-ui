@@ -19,6 +19,14 @@ export interface IGetReceiptBooksResponse {
   };
 }
 
+export interface IGetReceiptBookSingleArgs {
+  id: string;
+}
+
+export interface IGetReceiptBookSingleResponse {
+  receiptBook: IReceiptBookModel;
+}
+
 export interface ICreateReceiptBookArgs {
   item: {
     financialYear?: string;
@@ -57,6 +65,14 @@ export interface IDeleteReceiptBookResponse {
 // Receipts
 export interface IGetReceiptsAllResponse {
   receipts: IReceiptModel[];
+}
+
+export interface IGetReceiptSingleArgs {
+  id: string;
+}
+
+export interface IGetReceiptSingleResponse {
+  receipt: IReceiptModel;
 }
 
 export interface ICreateReceiptArgs {
