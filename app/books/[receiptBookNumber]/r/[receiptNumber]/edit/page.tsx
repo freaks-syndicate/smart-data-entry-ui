@@ -1,7 +1,4 @@
-'use client';
-import * as React from 'react';
-
-import ReceiptsEditTemplate from '@/components/templates/receipts/edit';
+import ReceiptsEditTemplate from '@/components/templates/receipt-books/receipts/edit';
 
 export interface IReceiptEditPageProps {}
 

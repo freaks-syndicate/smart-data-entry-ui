@@ -2,7 +2,6 @@
 import { Box, Button, Heading, Input } from '@chakra-ui/react';
 import cx from 'classnames';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 
@@ -20,8 +19,6 @@ export interface IAppProps {
 
 export default function ReceiptBooksTemplate(props: IAppProps) {
   const { receiptBooks: initialReceiptBooks } = props;
-
-  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [receiptBooks, setReceiptBooks] = useState<IReceiptBookModel[]>(initialReceiptBooks);
@@ -43,10 +40,6 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
     setReceiptBooks(filteredReceiptBooks);
   };
 
-  const toggleCreateReceipt = () => {
-    router.push('/create-receipt');
-  };
-
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
@@ -66,7 +59,7 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
 
           {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
           <Link href={'/books/create'}>
-            <Button colorScheme="green" onClick={toggleCreateReceipt}>
+            <Button colorScheme="green">
               <BsFileEarmarkPlus />
               Create Receipt Book
             </Button>
