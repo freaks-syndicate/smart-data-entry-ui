@@ -61,7 +61,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
           </Box>
 
           {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-          <Link href={`/books/${receiptBook.receiptBookNumber}/create-receipt`}>
+          <Link href={`/books/${receiptBook.receiptBookNumber}/r/create`}>
             <Button colorScheme="green">
               <BsFileEarmarkPlus />
               Create Receipt
