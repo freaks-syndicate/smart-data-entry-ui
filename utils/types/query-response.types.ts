@@ -84,7 +84,7 @@ export interface ICreateReceiptArgs {
     aadharNumber?: number;
     address?: string;
     amount: number;
-    date?: string;
+    date: string;
     financialYear?: number;
     mobileNumber?: number;
     modeOfPayment: ModeOfPayment;
