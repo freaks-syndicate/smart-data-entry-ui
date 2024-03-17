@@ -10,16 +10,16 @@ export interface IReceiptBookModel {
 }
 
 export enum ModeOfPayment {
-  cash,
-  cheque,
-  online,
+  cash = 'cash',
+  cheque = 'cheque',
+  online = 'online',
 }
 
 export interface IReceiptModel {
   id: string;
   uuid: string;
   receiptNumber: number;
-  financialYear?: number;
+  financialYear?: string;
   date?: string;
   mobileNumber?: number;
   name: string;
@@ -28,20 +28,6 @@ export interface IReceiptModel {
   aadharNumber?: number;
   panNumber?: string;
   modeOfPayment: ModeOfPayment;
-}
-
-// CreateReceipt FormData
-export interface IFormData {
-  reciptNumber: number;
-  email: string;
-  name: string;
-  financialYear: number;
-  date: Date;
-  mobileNumber: number | null;
-  address: string;
-  amount: number;
-  aadharNumber: number | null;
-  panNumber: string;
 }
 
 export interface IUserInfo {

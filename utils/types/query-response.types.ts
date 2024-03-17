@@ -83,7 +83,7 @@ export interface ICreateReceiptArgs {
     address?: string;
     amount: number;
     date: string;
-    financialYear?: number;
+    financialYear?: string;
     mobileNumber?: number;
     modeOfPayment: ModeOfPayment;
     name: string;
@@ -104,7 +104,7 @@ export interface IUpdateReceiptArgs {
     address?: string;
     amount?: number;
     date?: string;
-    financialYear?: number;
+    financialYear?: string;
     mobileNumber?: number;
     modeOfPayment?: ModeOfPayment;
     name?: string;
