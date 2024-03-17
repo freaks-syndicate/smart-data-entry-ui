@@ -4,17 +4,17 @@ import { GET_RECEIPT_BOOK } from '@/queries/receipt-book/get-receipt-book';
 import { IGetReceiptBookSingleArgs, IGetReceiptBookSingleResponse } from '@/utils/types/query-response.types';
 
 export interface IReceiptBookDetailsPageProps {
-  params: { receiptBookNumber: string };
+  params: { receiptBookId: string };
 }
 
 export default async function ReceiptBookDetailsPage(props: IReceiptBookDetailsPageProps) {
   const {
-    params: { receiptBookNumber },
+    params: { receiptBookId },
   } = props;
 
   const receiptBookResponse = await client.query<IGetReceiptBookSingleResponse, IGetReceiptBookSingleArgs>({
     query: GET_RECEIPT_BOOK,
-    variables: { where: { receiptBookNumber: { eq: +receiptBookNumber } } },
+    variables: { where: { id: receiptBookId } },
   });
 
   const receiptBook = receiptBookResponse?.data?.receiptBook;

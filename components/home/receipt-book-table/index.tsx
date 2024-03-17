@@ -63,7 +63,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
           {receiptBooks.map((receiptBook) => (
             <Tr key={receiptBook.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
-                <Link href={`/books/${receiptBook.receiptBookNumber}`}>{receiptBook.receiptBookNumber}</Link>
+                <Link href={`/books/${receiptBook.id}`}>{receiptBook.receiptBookNumber}</Link>
               </Td>
               <Td>{receiptBook.receiptSeries}</Td>
               <Td>{receiptBook.totalReceipts}</Td>
@@ -72,7 +72,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
               <Td>
                 <div className="flex gap-2">
                   {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/update/${receiptBook.receiptBookNumber}`}>
+                  <Link href={`/books/update/${receiptBook.id}`}>
                     <Button colorScheme="blue" size="sm">
                       <FaEdit />
                     </Button>

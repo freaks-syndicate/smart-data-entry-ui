@@ -11,12 +11,12 @@ import { IReceiptBookModel, IReceiptModel } from '@/utils/types/be-model-types';
 import { IDeleteReceiptArgs, IDeleteReceiptResponse } from '@/utils/types/query-response.types';
 
 export interface IReceiptsTableProps {
-  receiptBookNumber: IReceiptBookModel['receiptBookNumber'];
+  receiptBookId: IReceiptBookModel['id'];
   receipts: IReceiptModel[];
 }
 
 export default function ReceiptsTable(props: IReceiptsTableProps) {
-  const { receipts: initialReceipts, receiptBookNumber } = props;
+  const { receipts: initialReceipts, receiptBookId } = props;
 
   const [receipts, setReceipts] = useState<IReceiptModel[]>(initialReceipts);
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
           {receipts.map((receipt) => (
             <Tr key={receipt.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
-                <Link href={`/books/${receiptBookNumber}/r/${receipt.receiptNumber}`}>{receipt.receiptNumber}</Link>
+                <Link href={`/books/${receiptBookId}/r/${receipt.receiptNumber}`}>{receipt.receiptNumber}</Link>
               </Td>
               <Td>{receipt.date ? new Date(receipt.date).toLocaleDateString('en-US') : '-'}</Td>
               <Td>{receipt.mobileNumber}</Td>
@@ -99,7 +99,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               <Td>
                 <div className="flex gap-2">
                   {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/${receiptBookNumber}/r/${receipt.receiptNumber}/edit`}>
+                  <Link href={`/books/${receiptBookId}/r/${receipt.receiptNumber}/edit`}>
                     <Button colorScheme="blue" size="sm">
                       <FaEdit />
                     </Button>

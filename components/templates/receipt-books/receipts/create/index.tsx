@@ -1,6 +1,7 @@
 'use client';
 import { Heading } from '@chakra-ui/react';
 import cx from 'classnames';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
@@ -13,6 +14,9 @@ import styles from './create-receipt-template.module.scss';
 export interface ICreateReceiptTemplateProps {}
 
 export default function CreateReceiptTemplate(_props: ICreateReceiptTemplateProps) {
+  const params = useParams();
+  const receiptBookId = params.receiptBookId;
+
   const INITIAL_RECEIPT_FORM_DATA: ICreateReceiptArgs['item'] = {
     receiptNumber: 0,
     name: '',
@@ -24,7 +28,7 @@ export default function CreateReceiptTemplate(_props: ICreateReceiptTemplateProp
     aadharNumber: undefined,
     panNumber: '',
     modeOfPayment: ModeOfPayment.cash,
-    receiptBookId: '',
+    receiptBookId: receiptBookId as string,
   };
 
   const [receiptFormData, setReceiptFormData] = useState<ICreateReceiptArgs['item']>(INITIAL_RECEIPT_FORM_DATA);

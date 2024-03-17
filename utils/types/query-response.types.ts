@@ -21,9 +21,7 @@ export interface IGetReceiptBooksResponse {
 
 export interface IGetReceiptBookSingleArgs {
   where: {
-    receiptBookNumber: {
-      eq: number;
-    };
+    id: string;
   };
 }
 
