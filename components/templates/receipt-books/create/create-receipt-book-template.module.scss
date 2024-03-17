@@ -1,0 +1,6 @@
+.d-container {
+  @apply container;
+  @apply mx-auto;
+  @apply min-h-[calc(100vh-262px)];
+  @apply pt-5;
+}
