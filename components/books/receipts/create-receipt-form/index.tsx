@@ -1,11 +1,12 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
-import { Button, FormControl, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea } from '@chakra-ui/react';
 import cx from 'classnames';
 import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import { CREATE_RECEIPT } from '@/queries/receipt/create-receipt';
+import { ModeOfPayment } from '@/utils/types/be-model-types';
 import { ICreateReceiptArgs, ICreateReceiptResponse } from '@/utils/types/query-response.types';
 
 import styles from './create-receipt-form.module.scss';
@@ -53,13 +54,15 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     setRealTimeTranscript('');
   }, [activeField]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = event.target;
     setReceiptFormData((prev) => {
       if (name === 'date') {
         // Parse the input string to a Date object
         const dateValue = new Date(value);
         return { ...prev, [name]: dateValue.toISOString() };
+      } else if (type === 'number') {
+        return { ...prev, [name]: +value };
       } else {
         return { ...prev, [name]: value };
       }
@@ -84,22 +87,49 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
 
   return (
     <Stack spacing={2} direction="column" align="center" className={cx(styles['d-container'])}>
+      {/* Date */}
       <FormControl>
         <FormLabel>Date</FormLabel>
         <Input type="date" name="date" value={receiptFormData.date.split('T')[0]} onChange={handleChange} />
       </FormControl>
+
+      {/* Name */}
       <FormControl position="relative">
         <FormLabel>Name</FormLabel>
         <Input type="test" name="name" value={receiptFormData.name} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
       </FormControl>
+
+      {/* Receipt Number */}
+      <FormControl position="relative">
+        <FormLabel>Receipt Number</FormLabel>
+        <Input
+          type="number"
+          name="receiptNumber"
+          maxLength={10}
+          value={receiptFormData.receiptNumber !== null ? receiptFormData.receiptNumber : ''}
+          onChange={handleChange}
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div>
+      </FormControl>
+
+      {/* Amount */}
       <FormControl position="relative">
         <FormLabel>Amount</FormLabel>
         <Input type="number" name="amount" value={receiptFormData.amount} onChange={handleChange} />
-        {/*<div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">
-      {renderSpeechIcon("amount")}
-    </div>*/}
       </FormControl>
+
+      {/* Mode of Payment */}
+      <FormControl position="relative">
+        <FormLabel>Mode of Payment</FormLabel>
+        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.cash} onChange={handleChange}>
+          <option value={ModeOfPayment.cash}>Cash</option>
+          <option value={ModeOfPayment.cheque}>Cheque</option>
+          <option value={ModeOfPayment.online}>Online</option>
+        </Select>
+      </FormControl>
+
+      {/* Mobile */}
       <FormControl position="relative">
         <FormLabel>Mobile</FormLabel>
         <Input
@@ -112,6 +142,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div>
       </FormControl>
 
+      {/* Aadhar Number */}
       <FormControl position="relative">
         <FormLabel>Aadhar Number</FormLabel>
         <Input
@@ -124,6 +155,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('aadharNumber')}</div>
       </FormControl>
+
+      {/* PAN Number */}
       <FormControl position="relative">
         <FormLabel>Pan Number</FormLabel>
         <Input
@@ -136,16 +169,14 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('panNumber')}</div>
       </FormControl>
-      <FormControl>
+
+      {/* Financial Year */}
+      <FormControl position={'relative'}>
         <FormLabel>Financial Year</FormLabel>
-        <Input
-          type="number"
-          name="year"
-          placeholder="2023-2024"
-          value={receiptFormData.financialYear !== null ? receiptFormData.financialYear : ''}
-          onChange={handleChange}
-        />
+        <Input type="string" name="financialYear" placeholder="2023-2024" value={receiptFormData.financialYear} onChange={handleChange} />
       </FormControl>
+
+      {/* Address */}
       <FormControl position="relative">
         <FormLabel>Address</FormLabel>
         <Textarea

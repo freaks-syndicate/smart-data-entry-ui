@@ -20,7 +20,7 @@ export default function CreateReceiptTemplate(_props: ICreateReceiptTemplateProp
   const INITIAL_RECEIPT_FORM_DATA: ICreateReceiptArgs['item'] = {
     receiptNumber: 0,
     name: '',
-    financialYear: undefined,
+    financialYear: '',
     date: new Date().toISOString(),
     mobileNumber: undefined,
     address: '',
