@@ -5,7 +5,7 @@ import { ChangeEvent, useState } from 'react';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
-import ReceiptsTable from '@/components/books/receipts-table';
+import ReceiptsTable from '@/components/books/receipts/receipts-table';
 import { IReceiptBookModel } from '@/utils/types/be-model-types';
 
 import styles from './receipt-book-details.module.scss';
