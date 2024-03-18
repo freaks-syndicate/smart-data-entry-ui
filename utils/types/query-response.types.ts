@@ -70,7 +70,9 @@ export interface IGetReceiptsAllResponse {
 }
 
 export interface IGetReceiptSingleArgs {
-  id: string;
+  where: {
+    id: string;
+  };
 }
 
 export interface IGetReceiptSingleResponse {
