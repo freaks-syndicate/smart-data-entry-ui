@@ -11,7 +11,7 @@ import styles from './create-receipt-book-template.module.scss';
 
 export interface ICreateReceiptBookTemplateProps {}
 
-export const INITIAL_RECEIPT_BOOK_FORM_DATA: ICreateReceiptBookArgs['item'] = {
+const INITIAL_RECEIPT_BOOK_FORM_DATA: ICreateReceiptBookArgs['item'] = {
   receiptBookNumber: 0,
   financialYear: '',
   receiptSeries: 0,
