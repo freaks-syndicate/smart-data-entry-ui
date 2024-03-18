@@ -43,7 +43,7 @@ export interface ICreateReceiptBookResponse {
 }
 
 export interface IUpdateReceiptBookArgs {
-  id: string;
+  updateReceiptBookId: string;
   item: {
     financialYear?: string;
     receiptBookNumber?: number;
