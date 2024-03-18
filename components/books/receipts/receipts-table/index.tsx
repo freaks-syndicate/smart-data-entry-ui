@@ -67,7 +67,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
           {receipts.map((receipt) => (
             <Tr key={receipt.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
-                <Link href={`/books/${receiptBookId}/r/${receipt.receiptNumber}`}>{receipt.receiptNumber}</Link>
+                <Link href={`/books/${receiptBookId}/r/${receipt.id}`}>{receipt.receiptNumber}</Link>
               </Td>
               <Td>{receipt.date ? new Date(receipt.date).toLocaleDateString('en-US') : '-'}</Td>
               <Td>{receipt.mobileNumber}</Td>
@@ -99,7 +99,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               <Td>
                 <div className="flex gap-2">
                   {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/${receiptBookId}/r/${receipt.receiptNumber}/edit`}>
+                  <Link href={`/books/${receiptBookId}/r/${receipt.id}/edit`}>
                     <Button colorScheme="blue" size="sm">
                       <FaEdit />
                     </Button>
