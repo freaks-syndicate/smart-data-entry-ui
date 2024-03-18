@@ -1,0 +1,9 @@
+.d-container {
+  @apply container;
+  @apply mx-auto;
+  @apply min-h-[calc(100vh-262px)];
+  @apply p-5;
+  @apply flex;
+  @apply justify-center;
+  @apply items-center;
+}
