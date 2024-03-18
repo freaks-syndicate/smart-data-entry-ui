@@ -98,7 +98,7 @@ export interface ICreateReceiptResponse {
 }
 
 export interface IUpdateReceiptArgs {
-  id: string;
+  updateReceiptId: string;
   item: {
     aadharNumber?: number;
     address?: string;
