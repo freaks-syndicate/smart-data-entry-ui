@@ -1,18 +1,50 @@
-import { useParams } from 'next/navigation';
-import * as React from 'react';
+'use client';
+import { Heading } from '@chakra-ui/react';
+import cx from 'classnames';
+import { useState } from 'react';
 
-export interface IReceiptsEditTemplateProps {}
+import CustomSessionAuth from '@/components/auth/custom-session-auth';
+import UpdateReceiptForm from '@/components/books/receipts/update-receipt-form';
+import { IReceiptModel } from '@/utils/types/be-model-types';
+import { IUpdateReceiptArgs } from '@/utils/types/query-response.types';
 
-export default function ReceiptsEditTemplate(_props: IReceiptsEditTemplateProps) {
-  const router = useParams();
-  // Fetch receipt details based on the ID from your data source
-  // You can use this ID to retrieve the specific receipt details
+import styles from './receipt-edit-template.module.scss';
+
+export interface IReceiptsEditTemplateProps {
+  receiptBookId: string;
+  receipt: IReceiptModel;
+}
+
+export default function ReceiptsEditTemplate(props: IReceiptsEditTemplateProps) {
+  const { receipt, receiptBookId } = props;
+
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: IUpdateReceiptArgs['item'] = {
+    aadharNumber: receipt.aadharNumber,
+    address: receipt.address,
+    amount: receipt.amount,
+    date: receipt.date,
+    financialYear: receipt.financialYear,
+    mobileNumber: receipt.mobileNumber,
+    modeOfPayment: receipt.modeOfPayment,
+    name: receipt.name,
+    panNumber: receipt.panNumber,
+    receiptBookId: receiptBookId,
+    receiptNumber: receipt.receiptNumber,
+  };
+
+  const [receiptFormData, setReceiptFormData] = useState<IUpdateReceiptArgs['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
+
+  const reset = () => setReceiptFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   return (
-    <div>
-      <h1>Receipt Details</h1>
-      <p>Receipt ID: {router.id}</p>
-      {/* Display other receipt details here */}
-    </div>
+    <CustomSessionAuth>
+      <div className={cx(styles['d-container'])}>
+        {/* Heading */}
+        <Heading textAlign={'center'}>Update Receipt: {receipt.receiptNumber}</Heading>
+
+        {/* Form */}
+        <UpdateReceiptForm receiptFormData={receiptFormData} receiptId={receipt.id} setReceiptFormData={setReceiptFormData} reset={reset} />
+      </div>
+    </CustomSessionAuth>
   );
 }

@@ -17,7 +17,7 @@ export default async function ReceiptEditPage(props: IReceiptEditPageProps) {
 
   const receiptResponse = await client.query<IGetReceiptSingleResponse, IGetReceiptSingleArgs>({
     query: GET_RECEIPT,
-    variables: { id: receiptId },
+    variables: { where: { id: receiptId } },
   });
 
   return (
