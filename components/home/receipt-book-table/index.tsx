@@ -72,7 +72,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
               <Td>
                 <div className="flex gap-2">
                   {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/update/${receiptBook.id}`}>
+                  <Link href={`/books/${receiptBook.id}/update`}>
                     <Button colorScheme="blue" size="sm">
                       <FaEdit />
                     </Button>
