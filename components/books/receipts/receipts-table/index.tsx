@@ -48,7 +48,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
   if (error) return `Deletion error! ${error.message}`;
 
   return (
-    <Box margin="5" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box margin="1" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Table variant="simple">
         <Thead>
           <Tr bg="gray.200">
