@@ -1,10 +1,11 @@
 'use client';
-import { Box, Button, Heading, Input, Link } from '@chakra-ui/react';
+import { Box, Button, Heading, Input, Link, Text } from '@chakra-ui/react';
 import cx from 'classnames';
 import { ChangeEvent, useState } from 'react';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
+import ReceiptBookDetailsCard from '@/components/books/receipt-book-details-card';
 import ReceiptsTable from '@/components/books/receipts/receipts-table';
 import { IReceiptBookModel } from '@/utils/types/be-model-types';
 
@@ -47,7 +48,12 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
         {/* Heading */}
-        <Heading textAlign={'center'}>Receipt Book: {initialReceiptBook.receiptBookNumber}</Heading>
+        <Heading textAlign={'center'} mb={'1rem'}>
+          Receipt Book Details
+        </Heading>
+
+        {/* Receipt Book Details */}
+        <ReceiptBookDetailsCard receiptBook={receiptBook} />
 
         {/* Search and CTA */}
         <div className={cx(styles['d-container__search-cta'])}>
@@ -64,7 +70,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
           <Link href={`/books/${receiptBook.id}/r/create`}>
             <Button colorScheme="green">
               <BsFileEarmarkPlus />
-              Create Receipt
+              <Text ml={'0.5rem'}>Create Receipt</Text>
             </Button>
           </Link>
         </div>
