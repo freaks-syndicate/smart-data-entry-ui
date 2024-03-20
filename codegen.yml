@@ -1,0 +1,9 @@
+overwrite: true
+schema: 'https://smart-data-entry-be-service-kcxviwb2yq-el.a.run.app/graphql'
+documents: 'queries/**/*.ts'
+generates:
+  utils/types/generated/graphql.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
