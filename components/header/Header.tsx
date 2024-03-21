@@ -11,12 +11,11 @@ import { signOut } from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
 
 import { client } from '@/apollo/client.mjs';
 import { GET_USER_INFO } from '@/queries/user/get-user-info';
-import { IUserInfo } from '@/utils/types/be-model-types';
-import { IGetUserInfoResponse } from '@/utils/types/query-response.types';
+import { User, UserQuery, UserQueryVariables } from '@/utils/types/generated/graphql';
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
   const session = useSessionContext();
   const router = useRouter();
 
@@ -33,8 +32,13 @@ const Nav = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       if (!session.loading && userId) {
-        const { data } = await client.query<IGetUserInfoResponse>({ query: GET_USER_INFO, variables: { where: { userId: userId } } });
-        setUserInfo(data.user);
+        const { data } = await client.query<UserQuery, UserQueryVariables>({
+          query: GET_USER_INFO,
+          variables: { where: { userId: userId } },
+        });
+        if (data?.user) {
+          setUserInfo(data.user);
+        }
       }
     };
 
@@ -110,7 +114,7 @@ const Nav = () => {
                 <MenuButton as={Button}>
                   <div className="flex items-center justify-center gap-2">
                     <Text>Profile</Text>
-                    <Avatar size={'sm'} name={userInfo?.firstName} />
+                    <Avatar size={'sm'} name={userInfo?.firstName ?? ''} />
                   </div>
                 </MenuButton>
                 <MenuList bgColor={'InfoBackground'}>
