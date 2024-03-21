@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -6,34 +5,34 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
-import { DELETE_RECEIPT } from '@/queries/receipt/delete-receipt';
-import { IReceiptBookModel, IReceiptModel } from '@/utils/types/be-model-types';
-import { IDeleteReceiptArgs, IDeleteReceiptResponse } from '@/utils/types/query-response.types';
+import { Receipt, ReceiptBook, ReceiptsDocument, useDeleteReceiptMutation } from '@/utils/types/generated/graphql';
 
 export interface IReceiptsTableProps {
-  receiptBookId: IReceiptBookModel['id'];
-  receipts: IReceiptModel[];
+  receiptBookId: ReceiptBook['id'];
+  receipts: Receipt[];
 }
 
 export default function ReceiptsTable(props: IReceiptsTableProps) {
-  const { receipts: initialReceipts, receiptBookId } = props;
+  const { receipts, receiptBookId } = props;
 
-  const [receipts, setReceipts] = useState<IReceiptModel[]>(initialReceipts);
+  // const [receipts, setReceipts] = useState<Receipt[]>(initialReceipts);
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
-  const [deleteReceipt, { loading, error }] = useMutation<IDeleteReceiptResponse, IDeleteReceiptArgs>(DELETE_RECEIPT);
+  // const [deleteReceipt, { loading, error }] = useMutation<IDeleteReceiptResponse, IDeleteReceiptArgs>(DELETE_RECEIPT);
+  const [deleteReceiptMutation, { loading, error }] = useDeleteReceiptMutation();
 
-  const handleDeleteClick = (receiptId: IReceiptModel['id']) => {
+  const handleDeleteClick = (receiptId: Receipt['id']) => {
     setRecordToDelete(receiptId);
   };
 
   const handleDeleteConfirm = () => {
     if (recordToDelete) {
-      deleteReceipt({
-        variables: { id: recordToDelete },
-        onCompleted: () => {
-          setReceipts((currentReceipts) => currentReceipts.filter((receipt) => receipt.id !== recordToDelete));
-        },
+      deleteReceiptMutation({
+        variables: { deleteReceiptId: recordToDelete },
+        refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
+        // onCompleted: () => {
+        //   setReceipts((currentReceipts) => currentReceipts.filter((receipt) => receipt.id !== recordToDelete));
+        // },
       });
       setRecordToDelete(null);
     }
@@ -78,7 +77,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
-                title={receipt.name}
+                title={receipt.name ?? ''}
               >
                 {receipt.name}
               </Td>
@@ -89,7 +88,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
-                title={receipt.address}
+                title={receipt.address ?? ''}
               >
                 {receipt.address}
               </Td>

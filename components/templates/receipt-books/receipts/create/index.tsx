@@ -6,8 +6,7 @@ import { useState } from 'react';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import CreateReceiptForm from '@/components/books/receipts/create-receipt-form';
-import { ModeOfPayment } from '@/utils/types/be-model-types';
-import { ICreateReceiptArgs } from '@/utils/types/query-response.types';
+import { CreateReceiptMutationVariables, ModeOfPayment } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-template.module.scss';
 
@@ -17,7 +16,7 @@ export default function CreateReceiptTemplate(_props: ICreateReceiptTemplateProp
   const params = useParams();
   const receiptBookId = params.receiptBookId;
 
-  const INITIAL_RECEIPT_FORM_DATA: ICreateReceiptArgs['item'] = {
+  const INITIAL_RECEIPT_FORM_DATA: CreateReceiptMutationVariables['item'] = {
     receiptNumber: 0,
     name: '',
     financialYear: '',
@@ -27,11 +26,11 @@ export default function CreateReceiptTemplate(_props: ICreateReceiptTemplateProp
     amount: 0.0,
     aadharNumber: undefined,
     panNumber: '',
-    modeOfPayment: ModeOfPayment.cash,
+    modeOfPayment: ModeOfPayment.Cash,
     receiptBookId: receiptBookId as string,
   };
 
-  const [receiptFormData, setReceiptFormData] = useState<ICreateReceiptArgs['item']>(INITIAL_RECEIPT_FORM_DATA);
+  const [receiptFormData, setReceiptFormData] = useState<CreateReceiptMutationVariables['item']>(INITIAL_RECEIPT_FORM_DATA);
 
   return (
     <CustomSessionAuth>

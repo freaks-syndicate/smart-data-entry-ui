@@ -1,19 +1,16 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
-import { useMutation } from '@apollo/client';
 import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea } from '@chakra-ui/react';
 import cx from 'classnames';
 import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
-import { CREATE_RECEIPT } from '@/queries/receipt/create-receipt';
-import { ModeOfPayment } from '@/utils/types/be-model-types';
-import { ICreateReceiptArgs, ICreateReceiptResponse } from '@/utils/types/query-response.types';
+import { CreateReceiptMutationVariables, ModeOfPayment, ReceiptsDocument, useCreateReceiptMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-form.module.scss';
 
 export interface ICreateReceiptFormProps {
-  receiptFormData: ICreateReceiptArgs['item'];
-  setReceiptFormData: React.Dispatch<React.SetStateAction<ICreateReceiptArgs['item']>>;
+  receiptFormData: CreateReceiptMutationVariables['item'];
+  setReceiptFormData: React.Dispatch<React.SetStateAction<CreateReceiptMutationVariables['item']>>;
 }
 
 export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
@@ -28,10 +25,13 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     setSpeechLanguage,
   } = useSpeechToText();
 
-  const [createReceipt, { loading, error: createReceiptError }] = useMutation<ICreateReceiptResponse, ICreateReceiptArgs>(CREATE_RECEIPT);
+  const [createReceiptMutation, { loading, error: createReceiptError }] = useCreateReceiptMutation();
 
   const handleCreateReceiptClick = () => {
-    createReceipt({ variables: { item: receiptFormData } });
+    createReceiptMutation({
+      variables: { item: receiptFormData },
+      refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
+    });
   };
 
   const [realTimeTranscript, setRealTimeTranscript] = useState('');
@@ -53,6 +53,11 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   useEffect(() => {
     setRealTimeTranscript('');
   }, [activeField]);
+
+  if (createReceiptError) {
+    // TODO: Gracefully handle error
+    console.error(createReceiptError);
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target;
@@ -122,10 +127,10 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       {/* Mode of Payment */}
       <FormControl position="relative">
         <FormLabel>Mode of Payment</FormLabel>
-        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.cash} onChange={handleChange}>
-          <option value={ModeOfPayment.cash}>Cash</option>
-          <option value={ModeOfPayment.cheque}>Cheque</option>
-          <option value={ModeOfPayment.online}>Online</option>
+        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.Cash} onChange={handleChange}>
+          <option value={ModeOfPayment.Cash}>Cash</option>
+          <option value={ModeOfPayment.Cheque}>Cheque</option>
+          <option value={ModeOfPayment.Online}>Online</option>
         </Select>
       </FormControl>
 
@@ -164,7 +169,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
           name="panNumber"
           placeholder="ABCDE1234R"
           maxLength={10}
-          value={receiptFormData.panNumber}
+          value={receiptFormData.panNumber ?? undefined}
           onChange={handleChange}
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('panNumber')}</div>
@@ -173,7 +178,13 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       {/* Financial Year */}
       <FormControl position={'relative'}>
         <FormLabel>Financial Year</FormLabel>
-        <Input type="string" name="financialYear" placeholder="2023-2024" value={receiptFormData.financialYear} onChange={handleChange} />
+        <Input
+          type="string"
+          name="financialYear"
+          placeholder="2023-2024"
+          value={receiptFormData.financialYear ?? ''}
+          onChange={handleChange}
+        />
       </FormControl>
 
       {/* Address */}
@@ -182,7 +193,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <Textarea
           name="address"
           rows={4}
-          value={receiptFormData.address}
+          value={receiptFormData.address ?? ''}
           onChange={handleChange}
           placeholder="Enter your address here..."
         />
