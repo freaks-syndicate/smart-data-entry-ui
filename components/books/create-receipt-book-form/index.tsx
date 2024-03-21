@@ -1,15 +1,13 @@
-import { useMutation } from '@apollo/client';
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 
-import { CREATE_RECEIPT_BOOK } from '@/queries/receipt-book/create-receipt-book';
-import { ICreateReceiptBookArgs, ICreateReceiptBookResponse } from '@/utils/types/query-response.types';
+import { CreateReceiptBookMutationVariables, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-book-form.module.scss';
 
 export interface ICreateReceiptBookFormProps {
-  receiptBookFormData: ICreateReceiptBookArgs['item'];
-  setReceiptBookFormData: React.Dispatch<React.SetStateAction<ICreateReceiptBookArgs['item']>>;
+  receiptBookFormData: CreateReceiptBookMutationVariables['item'];
+  setReceiptBookFormData: React.Dispatch<React.SetStateAction<CreateReceiptBookMutationVariables['item']>>;
   reset: () => void;
 }
 
@@ -18,13 +16,11 @@ export default function CreateReceiptBookForm(props: ICreateReceiptBookFormProps
 
   const toast = useToast();
 
-  const [createReceiptBook, { loading, error: createReceiptBookError }] = useMutation<ICreateReceiptBookResponse, ICreateReceiptBookArgs>(
-    CREATE_RECEIPT_BOOK,
-  );
+  const [createReceiptBookMutation, { loading, error: createReceiptBookError }] = useCreateReceiptBookMutation();
 
   const handleCreateReceiptBookClick = () => {
     // TODO: Handle various errors
-    createReceiptBook({ variables: { item: receiptBookFormData }, onCompleted: handleReceiptBookCompletion });
+    createReceiptBookMutation({ variables: { item: receiptBookFormData }, onCompleted: handleReceiptBookCompletion });
   };
 
   const handleReceiptBookCompletion = () => {
@@ -99,7 +95,7 @@ export default function CreateReceiptBookForm(props: ICreateReceiptBookFormProps
           type="string"
           name="financialYear"
           placeholder="2023-2024"
-          value={receiptBookFormData.financialYear}
+          value={receiptBookFormData?.financialYear ?? ''}
           onChange={handleChange}
         />
       </FormControl>
