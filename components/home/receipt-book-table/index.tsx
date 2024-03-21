@@ -5,7 +5,7 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
-import { ReceiptBook, useDeleteReceiptBookMutation } from '@/utils/types/generated/graphql';
+import { ReceiptBook, ReceiptBooksDocument, useDeleteReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 export interface IReceiptBookTableProps {
   receiptBooks: ReceiptBook[];
@@ -27,6 +27,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
     if (recordToDelete) {
       deleteReceiptBookMutation({
         variables: { deleteReceiptBookId: recordToDelete },
+        refetchQueries: [{ query: ReceiptBooksDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
         onCompleted: () => {
           setReceiptBooks((currentReceiptBooks) => currentReceiptBooks.filter((receiptBook) => receiptBook.id !== recordToDelete));
         },
