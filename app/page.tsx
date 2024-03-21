@@ -1,16 +1,26 @@
-import { client } from '@/apollo/client.mjs';
+'use client';
 import ReceiptBooksTemplate from '@/components/templates/receipt-books';
-import { ReceiptBook, ReceiptBooksDocument, ReceiptBooksQuery, ReceiptBooksQueryVariables } from '@/utils/types/generated/graphql';
+import { ReceiptBook, useReceiptBooksQuery } from '@/utils/types/generated/graphql';
 
-export default async function HomePage() {
-  const receiptBooksResponse = await client.query<ReceiptBooksQuery, ReceiptBooksQueryVariables>({
-    query: ReceiptBooksDocument,
+export default function HomePage() {
+  const {
+    data: receiptBooksResponse,
+    loading,
+    error,
+  } = useReceiptBooksQuery({
     variables: {
       paginate: { page: 0, pageSize: 10 },
     },
   });
 
-  const receiptBooks = receiptBooksResponse.data?.receiptBooks?.results?.filter((book): book is ReceiptBook => book !== null) ?? [];
+  // TODO: Gracefully handle errors and loading
+  if (loading) return <p>Loading ...</p>;
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  const receiptBooks = receiptBooksResponse?.receiptBooks?.results?.filter((book): book is ReceiptBook => book !== null) ?? [];
 
   return (
     <div>

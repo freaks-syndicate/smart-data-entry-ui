@@ -1,4 +1,3 @@
-'use client';
 import { Box, Button, Heading, Input } from '@chakra-ui/react';
 import cx from 'classnames';
 import Link from 'next/link';
