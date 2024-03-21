@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -6,30 +5,28 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
-import { DELETE_RECEIPT_BOOK } from '@/queries/receipt-book/delete-receipt-book';
-import { IReceiptBookModel } from '@/utils/types/be-model-types';
-import { IDeleteReceiptBookArgs, IDeleteReceiptBookResponse } from '@/utils/types/query-response.types';
+import { ReceiptBook, useDeleteReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 export interface IReceiptBookTableProps {
-  receiptBooks: IReceiptBookModel[];
+  receiptBooks: ReceiptBook[];
 }
 
 export default function ReceiptBookTable(props: IReceiptBookTableProps) {
   const { receiptBooks: initialReceiptBooks } = props;
 
-  const [receiptBooks, setReceiptBooks] = useState<IReceiptBookModel[]>(initialReceiptBooks);
+  const [receiptBooks, setReceiptBooks] = useState<ReceiptBook[]>(initialReceiptBooks);
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
-  const [deleteReceiptBook, { loading, error }] = useMutation<IDeleteReceiptBookResponse, IDeleteReceiptBookArgs>(DELETE_RECEIPT_BOOK);
+  const [deleteReceiptBookMutation, { loading, error }] = useDeleteReceiptBookMutation();
 
-  const handleDelete = (receiptBookId: IReceiptBookModel['id']) => {
+  const handleDelete = (receiptBookId: ReceiptBook['id']) => {
     setRecordToDelete(receiptBookId);
   };
 
   const handleDeleteConfirm = () => {
     if (recordToDelete) {
-      deleteReceiptBook({
-        variables: { id: recordToDelete },
+      deleteReceiptBookMutation({
+        variables: { deleteReceiptBookId: recordToDelete },
         onCompleted: () => {
           setReceiptBooks((currentReceiptBooks) => currentReceiptBooks.filter((receiptBook) => receiptBook.id !== recordToDelete));
         },
