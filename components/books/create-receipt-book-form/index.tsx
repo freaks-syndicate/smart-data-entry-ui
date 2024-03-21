@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 
-import { CreateReceiptBookMutationVariables, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
+import { CreateReceiptBookMutationVariables, ReceiptBooksDocument, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-book-form.module.scss';
 
@@ -20,7 +20,16 @@ export default function CreateReceiptBookForm(props: ICreateReceiptBookFormProps
 
   const handleCreateReceiptBookClick = () => {
     // TODO: Handle various errors
-    createReceiptBookMutation({ variables: { item: receiptBookFormData }, onCompleted: handleReceiptBookCompletion });
+    createReceiptBookMutation({
+      variables: { item: receiptBookFormData },
+      onCompleted: handleReceiptBookCompletion,
+      refetchQueries: [
+        {
+          query: ReceiptBooksDocument,
+          variables: { paginate: { page: 0, pageSize: 10 } },
+        },
+      ],
+    });
   };
 
   const handleReceiptBookCompletion = () => {
