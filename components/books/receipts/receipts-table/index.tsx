@@ -16,10 +16,8 @@ export interface IReceiptsTableProps {
 export default function ReceiptsTable(props: IReceiptsTableProps) {
   const { receipts, receiptBookId } = props;
 
-  // const [receipts, setReceipts] = useState<Receipt[]>(initialReceipts);
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
-  // const [deleteReceipt, { loading, error }] = useMutation<IDeleteReceiptResponse, IDeleteReceiptArgs>(DELETE_RECEIPT);
   const [deleteReceiptMutation, { loading, error }] = useDeleteReceiptMutation();
 
   const handleDeleteClick = (receiptId: Receipt['id']) => {
@@ -31,9 +29,6 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
       deleteReceiptMutation({
         variables: { deleteReceiptId: recordToDelete },
         refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
-        // onCompleted: () => {
-        //   setReceipts((currentReceipts) => currentReceipts.filter((receipt) => receipt.id !== recordToDelete));
-        // },
       });
       setRecordToDelete(null);
     }

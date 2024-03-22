@@ -12,10 +12,6 @@ export default function ReceiptBookDetailsPage(props: IReceiptBookDetailsPagePro
     params: { receiptBookId },
   } = props;
 
-  // const receiptBookResponse = await client.query<ReceiptBookQuery, ReceiptBookQueryVariables>({
-  //   query: GET_RECEIPT_BOOK,
-  //   variables: { where: { id: receiptBookId } },
-  // });
   const {
     data: receiptBookResponse,
     loading,
