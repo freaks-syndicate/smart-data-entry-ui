@@ -5,11 +5,12 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
+import { ClientReceipt } from '@/utils/types';
 import { Receipt, ReceiptBook, ReceiptsDocument, useDeleteReceiptMutation } from '@/utils/types/generated/graphql';
 
 export interface IReceiptsTableProps {
   receiptBookId: ReceiptBook['id'];
-  receipts: Receipt[];
+  receipts: ClientReceipt[];
 }
 
 export default function ReceiptsTable(props: IReceiptsTableProps) {

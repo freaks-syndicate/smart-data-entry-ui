@@ -7,12 +7,12 @@ import { BsFileEarmarkPlus } from 'react-icons/bs';
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import ReceiptBookDetailsCard from '@/components/books/receipt-book-details-card';
 import ReceiptsTable from '@/components/books/receipts/receipts-table';
-import { IReceiptBookModel } from '@/utils/types/be-model-types';
+import { ClientReceipt, ClientReceiptBook } from '@/utils/types';
 
 import styles from './receipt-book-details.module.scss';
 
 export interface IReceiptBookDetailsTemplateProps {
-  receiptBook: IReceiptBookModel;
+  receiptBook: ClientReceiptBook;
 }
 
 let timer: ReturnType<typeof setTimeout>;
@@ -22,19 +22,28 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
   const debounceTime = 300;
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [receiptBook, setReceiptBook] = useState<IReceiptBookModel>(initialReceiptBook);
+  const [receiptBook, setReceiptBook] = useState<ClientReceiptBook>(initialReceiptBook);
+
+  const nonNullReceipts = receiptBook.receipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
 
   const filterReceipts = (query: string) => {
-    const filteredReceipts =
-      receiptBook.receipts &&
-      receiptBook.receipts.filter(
-        (receipt) =>
-          receipt.name.toLowerCase().includes(query.toLowerCase()) ||
-          receipt.receiptNumber.toString().includes(query.toLowerCase()) ||
-          (receipt.aadharNumber && receipt.aadharNumber.toString().includes(query.toLowerCase())) ||
-          (receipt.panNumber && receipt.panNumber.toLowerCase().includes(query.toLowerCase())),
+    const queryLowercased = query.toLowerCase();
+
+    // Filter receipts, ensuring receipt is not null before accessing its properties
+    const filteredReceipts = receiptBook.receipts?.filter((receipt) => {
+      if (receipt === null) return false; // Skip null receipts
+      return (
+        receipt.name?.toLowerCase().includes(queryLowercased) ||
+        receipt.receiptNumber.toString().includes(queryLowercased) ||
+        receipt.aadharNumber?.toString().includes(queryLowercased) ||
+        receipt.panNumber?.toLowerCase().includes(queryLowercased)
       );
-    setReceiptBook((prevReceiptBook) => ({ ...prevReceiptBook, receipts: filteredReceipts }));
+    });
+
+    setReceiptBook((prevReceiptBook) => ({
+      ...prevReceiptBook,
+      receipts: filteredReceipts ?? [],
+    }));
   };
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +84,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
           </Link>
         </div>
 
-        <ReceiptsTable receiptBookId={receiptBook.id} receipts={receiptBook.receipts ?? []} />
+        <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} />
       </div>
     </CustomSessionAuth>
   );

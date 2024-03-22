@@ -1,7 +1,8 @@
 import { client } from '@/apollo/client.mjs';
 import ReceiptBookDetailsTemplate from '@/components/templates/receipt-books/details';
 import { GET_RECEIPT_BOOK } from '@/queries/receipt-book/get-receipt-book';
-import { IGetReceiptBookSingleArgs, IGetReceiptBookSingleResponse } from '@/utils/types/query-response.types';
+import { ClientReceiptBook } from '@/utils/types';
+import { ReceiptBookQuery, ReceiptBookQueryVariables } from '@/utils/types/generated/graphql';
 
 export interface IReceiptBookDetailsPageProps {
   params: { receiptBookId: string };
@@ -12,16 +13,21 @@ export default async function ReceiptBookDetailsPage(props: IReceiptBookDetailsP
     params: { receiptBookId },
   } = props;
 
-  const receiptBookResponse = await client.query<IGetReceiptBookSingleResponse, IGetReceiptBookSingleArgs>({
+  const receiptBookResponse = await client.query<ReceiptBookQuery, ReceiptBookQueryVariables>({
     query: GET_RECEIPT_BOOK,
     variables: { where: { id: receiptBookId } },
   });
 
   const receiptBook = receiptBookResponse?.data?.receiptBook;
 
+  if (!receiptBook) {
+    console.error('Receipt book not found');
+    return null;
+  }
+
   return (
     <div>
-      <ReceiptBookDetailsTemplate receiptBook={receiptBook} />
+      <ReceiptBookDetailsTemplate receiptBook={receiptBook as ClientReceiptBook} />
     </div>
   );
 }
