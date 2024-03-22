@@ -1,26 +1,41 @@
-import { client } from '@/apollo/client.mjs';
+'use client';
 import ReceiptBookDetailsTemplate from '@/components/templates/receipt-books/details';
-import { GET_RECEIPT_BOOK } from '@/queries/receipt-book/get-receipt-book';
 import { ClientReceiptBook } from '@/utils/types';
-import { ReceiptBookQuery, ReceiptBookQueryVariables } from '@/utils/types/generated/graphql';
+import { useReceiptBookQuery } from '@/utils/types/generated/graphql';
 
 export interface IReceiptBookDetailsPageProps {
   params: { receiptBookId: string };
 }
 
-export default async function ReceiptBookDetailsPage(props: IReceiptBookDetailsPageProps) {
+export default function ReceiptBookDetailsPage(props: IReceiptBookDetailsPageProps) {
   const {
     params: { receiptBookId },
   } = props;
 
-  const receiptBookResponse = await client.query<ReceiptBookQuery, ReceiptBookQueryVariables>({
-    query: GET_RECEIPT_BOOK,
-    variables: { where: { id: receiptBookId } },
+  // const receiptBookResponse = await client.query<ReceiptBookQuery, ReceiptBookQueryVariables>({
+  //   query: GET_RECEIPT_BOOK,
+  //   variables: { where: { id: receiptBookId } },
+  // });
+  const {
+    data: receiptBookResponse,
+    loading,
+    error,
+  } = useReceiptBookQuery({
+    variables: {
+      where: { id: receiptBookId },
+    },
   });
 
-  const receiptBook = receiptBookResponse?.data?.receiptBook;
+  const receiptBook = receiptBookResponse?.receiptBook;
 
-  if (!receiptBook) {
+  if (loading) {
+    // TODO: Gracefully handle loading
+    return <p>loading...</p>;
+  }
+
+  if (error || !receiptBook) {
+    // TODO: Gracefully handle error
+    console.error('error: ', error);
     console.error('Receipt book not found');
     return null;
   }
