@@ -5,26 +5,27 @@ import { useState } from 'react';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import UpdateReceiptBookForm from '@/components/books/update-receipt-book-form';
-import { IReceiptBookModel } from '@/utils/types/be-model-types';
-import { IUpdateReceiptBookArgs } from '@/utils/types/query-response.types';
+import { ClientReceiptBook } from '@/utils/types';
+import { UpdateReceiptBookMutationVariables } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-book-template.module.scss';
 
 export interface IUpdateReceiptBookTemplateProps {
-  receiptBook: IReceiptBookModel;
+  receiptBook: ClientReceiptBook;
 }
 
 export default function UpdateReceiptBookTemplate(props: IUpdateReceiptBookTemplateProps) {
   const { receiptBook } = props;
 
-  const INITIAL_RECEIPT_BOOK_FORM_DATA: IUpdateReceiptBookArgs['item'] = {
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: UpdateReceiptBookMutationVariables['item'] = {
     receiptBookNumber: receiptBook.receiptBookNumber,
     financialYear: receiptBook.financialYear,
     receiptSeries: receiptBook.receiptSeries,
     totalReceipts: receiptBook.totalReceipts,
   };
 
-  const [receiptBookFormData, setReceiptBookFormData] = useState<IUpdateReceiptBookArgs['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
+  const [receiptBookFormData, setReceiptBookFormData] =
+    useState<UpdateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
 

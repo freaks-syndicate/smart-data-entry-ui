@@ -1,7 +1,6 @@
-import { client } from '@/apollo/client.mjs';
+'use client';
 import UpdateReceiptBookTemplate from '@/components/templates/receipt-books/update';
-import { GET_RECEIPT_BOOK } from '@/queries/receipt-book/get-receipt-book';
-import { IGetReceiptBookSingleArgs, IGetReceiptBookSingleResponse } from '@/utils/types/query-response.types';
+import { useReceiptBookQuery } from '@/utils/types/generated/graphql';
 
 export interface IUpdateReceiptBookPageProps {
   params: {
@@ -9,19 +8,38 @@ export interface IUpdateReceiptBookPageProps {
   };
 }
 
-export default async function UpdateReceiptBookPage(props: IUpdateReceiptBookPageProps) {
+export default function UpdateReceiptBookPage(props: IUpdateReceiptBookPageProps) {
   const {
     params: { receiptBookId },
   } = props;
 
-  const receiptBookResponse = await client.query<IGetReceiptBookSingleResponse, IGetReceiptBookSingleArgs>({
-    query: GET_RECEIPT_BOOK,
-    variables: { where: { id: receiptBookId } },
+  const {
+    data: receiptBookResponse,
+    loading,
+    error,
+  } = useReceiptBookQuery({
+    variables: {
+      where: { id: receiptBookId },
+    },
   });
+
+  const receiptBook = receiptBookResponse?.receiptBook;
+
+  if (loading) {
+    // TODO: Gracefully handle loading
+    return <p>loading...</p>;
+  }
+
+  if (error || !receiptBook) {
+    // TODO: Gracefully handle error
+    console.error('error: ', error);
+    console.error('Receipt book not found');
+    return null;
+  }
 
   return (
     <div>
-      <UpdateReceiptBookTemplate receiptBook={receiptBookResponse.data.receiptBook} />
+      <UpdateReceiptBookTemplate receiptBook={receiptBook} />
     </div>
   );
 }

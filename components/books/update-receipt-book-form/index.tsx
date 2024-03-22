@@ -1,17 +1,15 @@
-import { useMutation } from '@apollo/client';
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 
-import { UPDATE_RECEIPT_BOOK } from '@/queries/receipt-book/update-receipt-book';
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
-import { IUpdateReceiptBookArgs, IUpdateReceiptBookResponse } from '@/utils/types/query-response.types';
+import { UpdateReceiptBookMutationVariables, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-book-form.module.scss';
 
 export interface IUpdateReceiptBookFormProps {
   receiptBookId: string;
-  receiptBookFormData: IUpdateReceiptBookArgs['item'];
-  setReceiptBookFormData: React.Dispatch<React.SetStateAction<IUpdateReceiptBookArgs['item']>>;
+  receiptBookFormData: UpdateReceiptBookMutationVariables['item'];
+  setReceiptBookFormData: React.Dispatch<React.SetStateAction<UpdateReceiptBookMutationVariables['item']>>;
   reset: () => void;
 }
 
@@ -20,9 +18,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
 
   const toast = useToast();
 
-  const [updateReceiptBook, { loading, error: updateReceiptBookError }] = useMutation<IUpdateReceiptBookResponse, IUpdateReceiptBookArgs>(
-    UPDATE_RECEIPT_BOOK,
-  );
+  const [updateReceiptBookMutation, { loading, error: updateReceiptBookError }] = useUpdateReceiptBookMutation();
 
   const handleReceiptBookCompletion = () => {
     toast({
@@ -40,7 +36,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
   const handleUpdateReceiptBookClick = () => {
     // TODO: Handle various errors
     const payload = filterNonNullFields(receiptBookFormData);
-    updateReceiptBook({
+    updateReceiptBookMutation({
       variables: { updateReceiptBookId: receiptBookId, item: payload },
       onCompleted: handleReceiptBookCompletion,
     });
@@ -83,7 +79,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
       {/* Receipt Series */}
       <FormControl position="relative">
         <FormLabel>Receipt Series</FormLabel>
-        <Input type="number" name="receiptSeries" value={receiptBookFormData.receiptSeries} onChange={handleChange} />
+        <Input type="number" name="receiptSeries" value={receiptBookFormData.receiptSeries ?? 0} onChange={handleChange} />
       </FormControl>
 
       {/* Total Receipts */}
@@ -105,7 +101,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
           type="string"
           name="financialYear"
           placeholder="2023-2024"
-          value={receiptBookFormData.financialYear}
+          value={receiptBookFormData.financialYear ?? ''}
           onChange={handleChange}
         />
       </FormControl>
