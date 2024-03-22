@@ -138,7 +138,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       <FormControl position="relative">
         <FormLabel>Mobile</FormLabel>
         <Input
-          type="number"
+          type="string"
           name="mobileNumber"
           maxLength={10}
           value={receiptFormData.mobileNumber !== null ? receiptFormData.mobileNumber : ''}
