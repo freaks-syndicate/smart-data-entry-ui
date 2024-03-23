@@ -1,10 +1,11 @@
-import { Box, Button, Heading, Input, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Heading, Input, Text } from '@chakra-ui/react';
 import cx from 'classnames';
 import { ChangeEvent, useState } from 'react';
-import { BsFileEarmarkPlus } from 'react-icons/bs';
+import { BsArrowLeft, BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import ReceiptBookDetailsCard from '@/components/books/receipt-book-details-card';
+import CreateReceiptForm from '@/components/books/receipts/create-receipt-form';
 import ReceiptsTable from '@/components/books/receipts/receipts-table';
 import { ClientReceipt, ClientReceiptBook } from '@/utils/types';
 
@@ -22,6 +23,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [receiptBook, setReceiptBook] = useState<ClientReceiptBook>(initialReceiptBook);
+  const [showReceiptCreationForm, setShowReceiptCreationForm] = useState<boolean>(false);
 
   const nonNullReceipts = receiptBook.receipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
 
@@ -52,6 +54,10 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     timer = setTimeout(() => filterReceipts(query), debounceTime);
   };
 
+  const handleCreateReceiptClick = () => {
+    setShowReceiptCreationForm((prev) => !prev);
+  };
+
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
@@ -66,24 +72,29 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
         {/* Search and CTA */}
         <div className={cx(styles['d-container__search-cta'])}>
           <Box marginY="20px" width="42%">
-            <Input
-              variant="outline"
-              placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
+            {!showReceiptCreationForm ? (
+              <Input
+                variant="outline"
+                placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            ) : (
+              <div className="h-10"></div>
+            )}
           </Box>
 
-          {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-          <Link href={`/books/${receiptBook.id}/r/create`}>
-            <Button colorScheme="green">
-              <BsFileEarmarkPlus />
-              <Text ml={'0.5rem'}>Create Receipt</Text>
-            </Button>
-          </Link>
+          <Button colorScheme="green" onClick={handleCreateReceiptClick} minW={'200'}>
+            {showReceiptCreationForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
+            <Text ml={'0.5rem'}>{showReceiptCreationForm ? 'Back to Receipts' : 'Create Receipt'}</Text>
+          </Button>
         </div>
 
-        <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} />
+        {showReceiptCreationForm ? (
+          <CreateReceiptForm receiptBookId={receiptBook.id} />
+        ) : (
+          <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} />
+        )}
       </div>
     </CustomSessionAuth>
   );

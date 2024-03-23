@@ -9,12 +9,29 @@ import { CreateReceiptMutationVariables, ModeOfPayment, ReceiptsDocument, useCre
 import styles from './create-receipt-form.module.scss';
 
 export interface ICreateReceiptFormProps {
-  receiptFormData: CreateReceiptMutationVariables['item'];
-  setReceiptFormData: React.Dispatch<React.SetStateAction<CreateReceiptMutationVariables['item']>>;
+  // receiptFormData: CreateReceiptMutationVariables['item'];
+  // setReceiptFormData: React.Dispatch<React.SetStateAction<CreateReceiptMutationVariables['item']>>;
+  receiptBookId: string;
 }
 
 export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
-  const { receiptFormData, setReceiptFormData } = props;
+  const { receiptBookId } = props;
+
+  const INITIAL_RECEIPT_FORM_DATA: CreateReceiptMutationVariables['item'] = {
+    receiptNumber: 0,
+    name: '',
+    financialYear: '',
+    date: new Date().toISOString(),
+    mobileNumber: undefined,
+    address: '',
+    amount: 0.0,
+    aadharNumber: undefined,
+    panNumber: '',
+    modeOfPayment: ModeOfPayment.Cash,
+    receiptBookId: receiptBookId,
+  };
+
+  const [receiptFormData, setReceiptFormData] = useState<CreateReceiptMutationVariables['item']>(INITIAL_RECEIPT_FORM_DATA);
 
   const {
     transcript,
