@@ -1,26 +1,36 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
-import { useMutation } from '@apollo/client';
 import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
-import { UPDATE_RECEIPT } from '@/queries/receipt/update-receipt';
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
-import { ModeOfPayment } from '@/utils/types/be-model-types';
-import { IUpdateReceiptArgs, IUpdateReceiptResponse } from '@/utils/types/query-response.types';
+import { ClientReceipt } from '@/utils/types';
+import { ModeOfPayment, ReceiptsDocument, UpdateReceiptMutationVariables, useUpdateReceiptMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-form.module.scss';
 
 export interface IUpdateReceiptFormProps {
-  receiptId: string;
-  receiptFormData: IUpdateReceiptArgs['item'];
-  setReceiptFormData: React.Dispatch<React.SetStateAction<IUpdateReceiptArgs['item']>>;
-  reset: () => void;
+  receipt: ClientReceipt;
+  receiptBookId: string;
 }
 
 export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
-  const { receiptFormData, receiptId, reset, setReceiptFormData } = props;
+  const { receipt, receiptBookId } = props;
+
+  const INITIAL_RECEIPT_FORM_DATA: UpdateReceiptMutationVariables['item'] = {
+    aadharNumber: receipt.aadharNumber,
+    address: receipt.address,
+    amount: receipt.amount,
+    date: receipt.date,
+    financialYear: receipt.financialYear,
+    mobileNumber: receipt.mobileNumber,
+    modeOfPayment: receipt.modeOfPayment,
+    name: receipt.name,
+    panNumber: receipt.panNumber,
+    receiptBookId: receiptBookId,
+    receiptNumber: receipt.receiptNumber,
+  };
 
   const toast = useToast();
   const {
@@ -31,9 +41,9 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     // error,
     setSpeechLanguage,
   } = useSpeechToText();
+  const [updateReceiptMutation, { loading, error: updateReceiptError }] = useUpdateReceiptMutation();
 
-  const [updateReceipt, { loading, error: updateReceiptError }] = useMutation<IUpdateReceiptResponse, IUpdateReceiptArgs>(UPDATE_RECEIPT);
-
+  const [receiptFormData, setReceiptFormData] = useState<UpdateReceiptMutationVariables['item']>(INITIAL_RECEIPT_FORM_DATA);
   const [realTimeTranscript, setRealTimeTranscript] = useState('');
   const [activeField, setActiveField] = useState<string | null>(null);
 
@@ -56,6 +66,8 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     isListening ? stopListening() : startListening();
   };
 
+  const reset = () => setReceiptFormData(INITIAL_RECEIPT_FORM_DATA);
+
   const renderSpeechIcon = (fieldName: string) => (
     <Button onClick={() => handleSpeechClick(fieldName)} size="sm" variant="ghost">
       {isListening && activeField === fieldName ? <AudioOutlined /> : <AudioMutedOutlined />}
@@ -65,10 +77,10 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   const handleUpdateReceiptClick = () => {
     // TODO: Handle various errors
     const payload = filterNonNullFields(receiptFormData);
-    updateReceipt({
-      variables: { updateReceiptId: receiptId, item: payload },
+    updateReceiptMutation({
+      variables: { updateReceiptId: receipt.id, item: payload },
       onCompleted: handleReceiptCompletion,
-      refetchQueries: ['GET_RECEIPTS'],
+      refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
     });
   };
 
@@ -125,7 +137,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Name */}
       <FormControl position="relative">
         <FormLabel>Name</FormLabel>
-        <Input type="test" name="name" value={receiptFormData.name} onChange={handleChange} />
+        <Input type="test" name="name" value={receiptFormData.name ?? ''} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
       </FormControl>
 
@@ -145,16 +157,16 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Amount */}
       <FormControl position="relative">
         <FormLabel>Amount</FormLabel>
-        <Input type="number" name="amount" value={receiptFormData.amount} onChange={handleChange} />
+        <Input type="number" name="amount" value={receiptFormData.amount ?? 0} onChange={handleChange} />
       </FormControl>
 
       {/* Mode of Payment */}
       <FormControl position="relative">
         <FormLabel>Mode of Payment</FormLabel>
-        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.cash} onChange={handleChange}>
-          <option value={ModeOfPayment.cash}>Cash</option>
-          <option value={ModeOfPayment.cheque}>Cheque</option>
-          <option value={ModeOfPayment.online}>Online</option>
+        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.Cash} onChange={handleChange}>
+          <option value={ModeOfPayment.Cash}>Cash</option>
+          <option value={ModeOfPayment.Cheque}>Cheque</option>
+          <option value={ModeOfPayment.Online}>Online</option>
         </Select>
       </FormControl>
 
@@ -193,7 +205,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
           name="panNumber"
           placeholder="ABCDE1234R"
           maxLength={10}
-          value={receiptFormData.panNumber}
+          value={receiptFormData.panNumber ?? ''}
           onChange={handleChange}
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('panNumber')}</div>
@@ -202,7 +214,13 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Financial Year */}
       <FormControl position={'relative'}>
         <FormLabel>Financial Year</FormLabel>
-        <Input type="string" name="financialYear" placeholder="2023-2024" value={receiptFormData.financialYear} onChange={handleChange} />
+        <Input
+          type="string"
+          name="financialYear"
+          placeholder="2023-2024"
+          value={receiptFormData.financialYear ?? ''}
+          onChange={handleChange}
+        />
       </FormControl>
 
       {/* Address */}
@@ -211,7 +229,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Textarea
           name="address"
           rows={4}
-          value={receiptFormData.address}
+          value={receiptFormData.address ?? ''}
           onChange={handleChange}
           placeholder="Enter your address here..."
         />

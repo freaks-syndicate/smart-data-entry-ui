@@ -7,6 +7,7 @@ import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import ReceiptBookDetailsCard from '@/components/books/receipt-book-details-card';
 import CreateReceiptForm from '@/components/books/receipts/create-receipt-form';
 import ReceiptsTable from '@/components/books/receipts/receipts-table';
+import UpdateReceiptForm from '@/components/books/receipts/update-receipt-form';
 import { ClientReceipt, ClientReceiptBook } from '@/utils/types';
 
 import styles from './receipt-book-details.module.scss';
@@ -24,8 +25,12 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [receiptBook, setReceiptBook] = useState<ClientReceiptBook>(initialReceiptBook);
   const [showReceiptCreationForm, setShowReceiptCreationForm] = useState<boolean>(false);
+  const [showReceiptUpdateForm, setShowReceiptUpdateForm] = useState<boolean>(false);
+  const [receiptIdToUpdate, setReceiptIdToUpdate] = useState<string>('');
 
   const nonNullReceipts = receiptBook.receipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
+  const ctaText = showReceiptCreationForm || showReceiptUpdateForm ? 'Back to Receipts' : 'Create Receipt';
+  const receipToUpdate = receiptBook.receipts?.filter((receipt) => receipt?.id === receiptIdToUpdate)[0];
 
   const filterReceipts = (query: string) => {
     const queryLowercased = query.toLowerCase();
@@ -54,10 +59,17 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     timer = setTimeout(() => filterReceipts(query), debounceTime);
   };
 
-  const handleCreateReceiptClick = () => {
-    setShowReceiptCreationForm((prev) => !prev);
+  const handleCtaClick = () => {
+    showReceiptCreationForm ? setShowReceiptCreationForm((prev) => !prev) : setShowReceiptUpdateForm((prev) => !prev);
   };
 
+  const handleUpdateReceiptClick = (receiptId: string) => {
+    setShowReceiptUpdateForm((prev) => !prev);
+    setReceiptIdToUpdate(receiptId);
+  };
+
+  console.log('showReceiptUpdateForm: ', showReceiptUpdateForm);
+  console.log('showReceiptCreationForm: ', showReceiptCreationForm);
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
@@ -72,7 +84,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
         {/* Search and CTA */}
         <div className={cx(styles['d-container__search-cta'])}>
           <Box marginY="20px" width="42%">
-            {!showReceiptCreationForm ? (
+            {!showReceiptCreationForm || !showReceiptUpdateForm ? (
               <Input
                 variant="outline"
                 placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
@@ -84,16 +96,18 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
             )}
           </Box>
 
-          <Button colorScheme="green" onClick={handleCreateReceiptClick} minW={'200'}>
+          <Button colorScheme="green" onClick={handleCtaClick} minW={'200'}>
             {showReceiptCreationForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
-            <Text ml={'0.5rem'}>{showReceiptCreationForm ? 'Back to Receipts' : 'Create Receipt'}</Text>
+            <Text ml={'0.5rem'}>{ctaText}</Text>
           </Button>
         </div>
 
         {showReceiptCreationForm ? (
           <CreateReceiptForm receiptBookId={receiptBook.id} />
+        ) : showReceiptUpdateForm ? (
+          <UpdateReceiptForm receipt={receipToUpdate as ClientReceipt} receiptBookId={receiptBook.id} />
         ) : (
-          <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} />
+          <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} handleUpdateReceiptClick={handleUpdateReceiptClick} />
         )}
       </div>
     </CustomSessionAuth>

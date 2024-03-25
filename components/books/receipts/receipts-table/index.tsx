@@ -11,10 +11,11 @@ import { Receipt, ReceiptBook, ReceiptsDocument, useDeleteReceiptMutation } from
 export interface IReceiptsTableProps {
   receiptBookId: ReceiptBook['id'];
   receipts: ClientReceipt[];
+  handleUpdateReceiptClick: (receiptId: string) => void;
 }
 
 export default function ReceiptsTable(props: IReceiptsTableProps) {
-  const { receipts, receiptBookId } = props;
+  const { receipts, receiptBookId, handleUpdateReceiptClick } = props;
 
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
@@ -94,11 +95,14 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               <Td>
                 <div className="flex gap-2">
                   {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/${receiptBookId}/r/${receipt.id}/edit`}>
+                  {/* <Link href={`/books/${receiptBookId}/r/${receipt.id}/edit`}>
                     <Button colorScheme="blue" size="sm">
                       <FaEdit />
                     </Button>
-                  </Link>
+                  </Link> */}
+                  <Button colorScheme="green" size={'sm'} onClick={() => handleUpdateReceiptClick(receipt.id)}>
+                    <FaEdit />
+                  </Button>
 
                   <Button colorScheme="red" size="sm" onClick={() => handleDeleteClick(receipt.id)}>
                     <MdDelete />
