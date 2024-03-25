@@ -1,10 +1,10 @@
 import { Badge, Box, Divider, Flex, Progress, Text, useColorModeValue } from '@chakra-ui/react';
 import Image from 'next/image';
 
-import { IReceiptBookModel } from '@/utils/types/be-model-types';
+import { ClientReceiptBook } from '@/utils/types';
 
 export interface IReceiptBookDetailsCardProps {
-  receiptBook: IReceiptBookModel;
+  receiptBook: ClientReceiptBook;
 }
 
 export default function ReceiptBookDetailsCard(props: IReceiptBookDetailsCardProps) {
