@@ -21,9 +21,13 @@ const Nav = () => {
 
   let userId: string | null = null;
 
-  if (!session.loading && session.doesSessionExist === false) {
-    router.push('/auth');
-  }
+  // TODO: Validate if this code is causing any auth related issues
+  // useEffect(() => {
+  //   if (!session.loading && 'doesSessionExist' in session && !session.doesSessionExist) {
+  //     console.log('[+] Redirecting to auth');
+  //     router.push('/auth');
+  //   }
+  // }, [session, router]);
 
   if (!session.loading) {
     userId = session.userId;
