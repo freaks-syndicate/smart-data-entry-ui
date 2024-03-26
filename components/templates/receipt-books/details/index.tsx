@@ -68,8 +68,6 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     setReceiptIdToUpdate(receiptId);
   };
 
-  console.log('showReceiptUpdateForm: ', showReceiptUpdateForm);
-  console.log('showReceiptCreationForm: ', showReceiptCreationForm);
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
