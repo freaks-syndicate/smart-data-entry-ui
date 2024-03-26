@@ -104,7 +104,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
         <Input
           type="string"
           name="financialYear"
-          placeholder="2023-2024"
+          placeholder="e.g. 2023-2024"
           value={receiptBookFormData.financialYear ?? ''}
           onChange={handleChange}
         />
