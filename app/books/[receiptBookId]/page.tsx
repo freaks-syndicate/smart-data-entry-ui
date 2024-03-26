@@ -1,6 +1,5 @@
 'use client';
 import ReceiptBookDetailsTemplate from '@/components/templates/receipt-books/details';
-import { ClientReceiptBook } from '@/utils/types';
 import { useReceiptBookQuery } from '@/utils/types/generated/graphql';
 
 export interface IReceiptBookDetailsPageProps {
@@ -38,7 +37,7 @@ export default function ReceiptBookDetailsPage(props: IReceiptBookDetailsPagePro
 
   return (
     <div>
-      <ReceiptBookDetailsTemplate receiptBook={receiptBook as ClientReceiptBook} />
+      <ReceiptBookDetailsTemplate receiptBook={receiptBook} />
     </div>
   );
 }

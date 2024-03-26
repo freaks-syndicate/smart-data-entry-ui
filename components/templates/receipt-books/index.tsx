@@ -6,21 +6,21 @@ import { BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
 import ReceiptBookTable from '@/components/home/receipt-book-table';
-import { ReceiptBook } from '@/utils/types/generated/graphql';
+import { ClientReceiptBook } from '@/utils/types';
 
 import styles from './receipt-book-template.module.scss';
 
 let timer: ReturnType<typeof setTimeout>;
 
 export interface IAppProps {
-  receiptBooks: ReceiptBook[];
+  receiptBooks: ClientReceiptBook[];
 }
 
 export default function ReceiptBooksTemplate(props: IAppProps) {
   const { receiptBooks: initialReceiptBooks } = props;
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [receiptBooks, setReceiptBooks] = useState<ReceiptBook[]>(initialReceiptBooks);
+  const [receiptBooks, setReceiptBooks] = useState<ClientReceiptBook[]>(initialReceiptBooks);
 
   const debounceTime = 300;
 
