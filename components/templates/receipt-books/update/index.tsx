@@ -27,8 +27,6 @@ export default function UpdateReceiptBookTemplate(props: IUpdateReceiptBookTempl
   const [receiptBookFormData, setReceiptBookFormData] =
     useState<UpdateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
-  const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
-
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
@@ -40,7 +38,6 @@ export default function UpdateReceiptBookTemplate(props: IUpdateReceiptBookTempl
           receiptBookId={receiptBook.id}
           receiptBookFormData={receiptBookFormData}
           setReceiptBookFormData={setReceiptBookFormData}
-          reset={reset}
         />
       </div>
     </CustomSessionAuth>

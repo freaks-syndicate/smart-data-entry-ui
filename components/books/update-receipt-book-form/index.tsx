@@ -2,7 +2,7 @@ import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-
 import cx from 'classnames';
 
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
-import { UpdateReceiptBookMutationVariables, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
+import { ReceiptBookDocument, UpdateReceiptBookMutationVariables, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-book-form.module.scss';
 
@@ -10,11 +10,11 @@ export interface IUpdateReceiptBookFormProps {
   receiptBookId: string;
   receiptBookFormData: UpdateReceiptBookMutationVariables['item'];
   setReceiptBookFormData: React.Dispatch<React.SetStateAction<UpdateReceiptBookMutationVariables['item']>>;
-  reset: () => void;
+  reset?: () => void;
 }
 
 export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps) {
-  const { receiptBookId, receiptBookFormData, setReceiptBookFormData, reset } = props;
+  const { receiptBookId, receiptBookFormData, setReceiptBookFormData } = props;
 
   const toast = useToast();
 
@@ -29,8 +29,6 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
       isClosable: true,
       position: 'bottom-left',
     });
-
-    reset();
   };
 
   const handleUpdateReceiptBookClick = () => {
@@ -38,6 +36,12 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
     const payload = filterNonNullFields(receiptBookFormData);
     updateReceiptBookMutation({
       variables: { updateReceiptBookId: receiptBookId, item: payload },
+      refetchQueries: [
+        {
+          query: ReceiptBookDocument,
+          variables: { where: { id: receiptBookId } },
+        },
+      ],
       onCompleted: handleReceiptBookCompletion,
     });
   };
