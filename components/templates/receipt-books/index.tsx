@@ -1,7 +1,7 @@
 import { Box, Button, Heading, Input } from '@chakra-ui/react';
 import cx from 'classnames';
 import Link from 'next/link';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
@@ -10,11 +10,11 @@ import { ClientReceiptBook } from '@/utils/types';
 
 import styles from './receipt-book-template.module.scss';
 
-let timer: ReturnType<typeof setTimeout>;
-
 export interface IAppProps {
   receiptBooks: ClientReceiptBook[];
 }
+
+let timer: ReturnType<typeof setTimeout>;
 
 export default function ReceiptBooksTemplate(props: IAppProps) {
   const { receiptBooks: initialReceiptBooks } = props;
@@ -24,6 +24,21 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
 
   const debounceTime = 300;
 
+  const filterReceiptBooks = (query: string) => {
+    if (!query) {
+      setReceiptBooks(initialReceiptBooks);
+      return;
+    }
+
+    // Filter receipt books, ensuring receipt book is not null before accessing its properties
+    const filteredReceiptBooks = initialReceiptBooks?.filter((receiptBook) => {
+      if (receiptBook === null) return false; // Skip null receipts
+      return receiptBook.receiptBookNumber?.toString().includes(query) || receiptBook.receiptSeries.toString().includes(query);
+    });
+
+    setReceiptBooks(filteredReceiptBooks);
+  };
+
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -31,13 +46,7 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
     timer = setTimeout(() => filterReceiptBooks(query), debounceTime);
   };
 
-  const filterReceiptBooks = (query: string) => {
-    const filteredReceiptBooks = receiptBooks.filter(
-      (record) =>
-        record.receiptBookNumber.toString().includes(query.toLowerCase()) || record.receiptSeries.toString().includes(query.toLowerCase()),
-    );
-    setReceiptBooks(filteredReceiptBooks);
-  };
+  useEffect(() => () => clearTimeout(timer), []);
 
   return (
     <CustomSessionAuth>
