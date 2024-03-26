@@ -28,7 +28,7 @@ export default function CreateReceiptBookTemplate(_props: ICreateReceiptBookTemp
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
         {/* Heading */}
-        <Heading textAlign={'center'}>Create Receipt</Heading>
+        <Heading textAlign={'center'}>Create Receipt Book</Heading>
 
         {/* Form */}
         <CreateReceiptBookForm receiptBookFormData={receiptBookFormData} setReceiptBookFormData={setReceiptBookFormData} reset={reset} />
