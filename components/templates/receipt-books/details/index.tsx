@@ -33,10 +33,15 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
   const receipToUpdate = receiptBook.receipts?.filter((receipt) => receipt?.id === receiptIdToUpdate)[0];
 
   const filterReceipts = (query: string) => {
+    if (!query) {
+      setReceiptBook(initialReceiptBook);
+      return;
+    }
+
     const queryLowercased = query.toLowerCase();
 
     // Filter receipts, ensuring receipt is not null before accessing its properties
-    const filteredReceipts = receiptBook.receipts?.filter((receipt) => {
+    const filteredReceipts = initialReceiptBook.receipts?.filter((receipt) => {
       if (receipt === null) return false; // Skip null receipts
       return (
         receipt.name?.toLowerCase().includes(queryLowercased) ||
