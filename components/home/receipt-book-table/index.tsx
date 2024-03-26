@@ -60,7 +60,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
         </Thead>
         <Tbody>
           {receiptBooks.map((receiptBook) => (
-            <Tr key={receiptBook.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
+            <Tr key={receiptBook.id} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
                 <Link href={`/books/${receiptBook.id}`}>{receiptBook.receiptBookNumber}</Link>
               </Td>
