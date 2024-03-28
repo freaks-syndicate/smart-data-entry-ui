@@ -14,46 +14,71 @@ export const useSpeechToText = (initialLanguage: string = 'en-US'): SpeechToText
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState(initialLanguage);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
+  // Initialize media recorder
   useEffect(() => {
-    if (typeof window === 'undefined' || (!window.SpeechRecognition && !window.webkitSpeechRecognition)) {
-      setError('Speech recognition is not supported in this browser.');
-      return;
-    }
+    const sendAudioToServer = async (audioBlob: Blob) => {
+      const formData = new FormData();
+      formData.append('audioContent', audioBlob);
+      formData.append('languageCode', language); // You can dynamically set the language
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = language;
-    recognition.continuous = true; // Keep listening even after the user stops speaking
-    recognition.interimResults = true; // Show intermediate results
-
-    recognition.onresult = (event) => {
-      const currentTranscript = Array.from(event.results)
-        .map((result) => result[0].transcript)
-        .join('');
-      setTranscript(currentTranscript);
-    };
-
-    recognition.onerror = (event) => {
-      setError(event.error);
+      try {
+        const response = await fetch('/api', {
+          method: 'POST',
+          body: formData,
+        });
+        if (!response.ok) {
+          throw new Error('Failed to transcribe audio.');
+        }
+        const data = await response.json();
+        setTranscript(data.transcript);
+      } catch (error) {
+        console.error('Error sending audio to server:', error);
+        setError('Failed to transcribe audio.');
+      }
     };
 
     if (isListening) {
-      recognition.start();
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          const newMediaRecorder = new MediaRecorder(stream);
+          setMediaRecorder(newMediaRecorder);
+
+          const audioChunks: BlobPart[] = [];
+          newMediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+          };
+
+          newMediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            sendAudioToServer(audioBlob);
+          };
+
+          newMediaRecorder.start();
+        })
+        .catch((err) => {
+          console.error('Error accessing audio device:', err);
+          setError('Error accessing audio device.');
+        });
     } else {
-      recognition.stop();
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+      }
     }
 
-    return () => recognition.stop();
-  }, [isListening, language]);
+    // Cleanup function to stop the media recorder when the component unmounts or stops listening
+    return () => {
+      if (mediaRecorder) {
+        mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [isListening, language, mediaRecorder]);
 
   const startListening = () => setIsListening(true);
   const stopListening = () => setIsListening(false);
-
-  const setSpeechLanguage = (newLanguage: string) => {
-    setLanguage(newLanguage);
-  };
+  const setSpeechLanguage = (newLanguage: string) => setLanguage(newLanguage);
 
   return {
     transcript,
