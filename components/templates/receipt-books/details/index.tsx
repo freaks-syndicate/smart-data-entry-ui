@@ -65,7 +65,14 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
   };
 
   const handleCtaClick = () => {
-    showReceiptCreationForm ? setShowReceiptCreationForm((prev) => !prev) : setShowReceiptUpdateForm((prev) => !prev);
+    if (!showReceiptCreationForm && !showReceiptUpdateForm) {
+      setShowReceiptCreationForm(true);
+    } else if (showReceiptCreationForm || showReceiptUpdateForm) {
+      setShowReceiptCreationForm(false);
+      setShowReceiptUpdateForm(false);
+    } else {
+      setShowReceiptUpdateForm(true);
+    }
   };
 
   const handleUpdateReceiptClick = (receiptId: string) => {
