@@ -101,6 +101,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     </Button>
   );
 
+  const reset = () => setReceiptFormData(INITIAL_RECEIPT_FORM_DATA);
+
   if (createReceiptError) {
     console.error(createReceiptError);
   }
@@ -219,7 +221,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <Button colorScheme="green" size="md" disabled={loading} onClick={handleCreateReceiptClick}>
           Save
         </Button>
-        <Button colorScheme="red" size="md">
+        <Button colorScheme="red" size="md" onClick={reset}>
           Reset
         </Button>
       </Stack>

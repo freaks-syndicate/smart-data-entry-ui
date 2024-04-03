@@ -1,24 +1,35 @@
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
+import { useState } from 'react';
 
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
+import { ClientReceiptBook } from '@/utils/types';
 import { ReceiptBookDocument, UpdateReceiptBookMutationVariables, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-book-form.module.scss';
 
 export interface IUpdateReceiptBookFormProps {
   receiptBookId: string;
-  receiptBookFormData: UpdateReceiptBookMutationVariables['item'];
-  setReceiptBookFormData: React.Dispatch<React.SetStateAction<UpdateReceiptBookMutationVariables['item']>>;
-  reset: () => void;
+  receiptBook: ClientReceiptBook;
 }
 
 export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps) {
-  const { receiptBookId, receiptBookFormData, setReceiptBookFormData, reset } = props;
+  const { receiptBookId, receiptBook } = props;
+
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: UpdateReceiptBookMutationVariables['item'] = {
+    receiptBookNumber: receiptBook.receiptBookNumber,
+    financialYear: receiptBook.financialYear,
+    receiptSeries: receiptBook.receiptSeries,
+    totalReceipts: receiptBook.totalReceipts,
+  };
 
   const toast = useToast();
-
   const [updateReceiptBookMutation, { loading, error: updateReceiptBookError }] = useUpdateReceiptBookMutation();
+
+  const [receiptBookFormData, setReceiptBookFormData] =
+    useState<UpdateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
+
+  const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const handleReceiptBookCompletion = () => {
     toast({

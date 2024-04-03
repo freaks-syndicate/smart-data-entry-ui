@@ -1,22 +1,28 @@
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
+import { useState } from 'react';
 
 import { CreateReceiptBookMutationVariables, ReceiptBooksDocument, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-book-form.module.scss';
 
-export interface ICreateReceiptBookFormProps {
-  receiptBookFormData: CreateReceiptBookMutationVariables['item'];
-  setReceiptBookFormData: React.Dispatch<React.SetStateAction<CreateReceiptBookMutationVariables['item']>>;
-  reset: () => void;
-}
+export interface ICreateReceiptBookFormProps {}
 
-export default function CreateReceiptBookForm(props: ICreateReceiptBookFormProps) {
-  const { receiptBookFormData, setReceiptBookFormData, reset } = props;
+export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProps) {
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: CreateReceiptBookMutationVariables['item'] = {
+    receiptBookNumber: 0,
+    financialYear: '',
+    receiptSeries: 0,
+    totalReceipts: 0,
+  };
 
   const toast = useToast();
+  const [receiptBookFormData, setReceiptBookFormData] =
+    useState<CreateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const [createReceiptBookMutation, { loading, error: createReceiptBookError }] = useCreateReceiptBookMutation();
+
+  const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const handleCreateReceiptBookClick = () => {
     // TODO: Handle various errors

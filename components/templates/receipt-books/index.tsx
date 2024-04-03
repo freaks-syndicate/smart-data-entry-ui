@@ -1,10 +1,11 @@
-import { Box, Button, Heading, Input } from '@chakra-ui/react';
+import { Box, Button, Heading, Input, Text } from '@chakra-ui/react';
 import cx from 'classnames';
-import Link from 'next/link';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { BsFileEarmarkPlus } from 'react-icons/bs';
+import { BsArrowLeft, BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
+import CreateReceiptBookForm from '@/components/books/create-receipt-book-form';
+import UpdateReceiptBookForm from '@/components/books/update-receipt-book-form';
 import ReceiptBookTable from '@/components/home/receipt-book-table';
 import { ClientReceiptBook } from '@/utils/types';
 
@@ -21,8 +22,18 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [receiptBooks, setReceiptBooks] = useState<ClientReceiptBook[]>(initialReceiptBooks);
+  const [showReceiptBookCreationForm, setShowReceiptBookCreationForm] = useState<boolean>(false);
+  const [showReceiptBookUpdateForm, setShowReceiptBookUpdateForm] = useState<boolean>(false);
+  const [receiptIdToUpdate, setReceiptIdToUpdate] = useState<string>('');
 
   const debounceTime = 300;
+  const pageTitle = showReceiptBookCreationForm
+    ? 'Create Receipt Book'
+    : showReceiptBookUpdateForm
+      ? 'Udpate Receipt Book'
+      : 'Receipt Books';
+  const ctaText = showReceiptBookCreationForm || showReceiptBookUpdateForm ? 'Back to Receipt Books' : 'Create Receipt Book';
+  const receipBookToUpdate = receiptBooks.filter((receiptBook) => receiptBook?.id === receiptIdToUpdate)[0];
 
   const filterReceiptBooks = (query: string) => {
     if (!query) {
@@ -44,6 +55,17 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
     setReceiptBooks(filteredReceiptBooks);
   };
 
+  const handleCtaClick = () => {
+    if (!showReceiptBookCreationForm && !showReceiptBookUpdateForm) {
+      setShowReceiptBookCreationForm(true);
+    } else if (showReceiptBookCreationForm || showReceiptBookUpdateForm) {
+      setShowReceiptBookCreationForm(false);
+      setShowReceiptBookUpdateForm(false);
+    } else {
+      setShowReceiptBookUpdateForm(true);
+    }
+  };
+
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -53,33 +75,47 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
 
   useEffect(() => () => clearTimeout(timer), []);
 
+  const handleUpdateReceiptBookClick = (receiptId: string) => {
+    setShowReceiptBookUpdateForm((prev) => !prev);
+    setReceiptIdToUpdate(receiptId);
+  };
+
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
         {/* Heading */}
-        <Heading textAlign={'center'}>Receipt Books</Heading>
+        <Heading textAlign={'center'} mb={'1rem'}>
+          {pageTitle}
+        </Heading>
 
         {/* Search and CTA */}
         <div className={cx(styles['d-container__search-cta'])}>
-          <Box margin="20px" width="30%">
-            <Input
-              variant="outline"
-              placeholder="Search by Receipt Book Number or Receipt Series"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
+          <Box marginY="20px" width="30%">
+            {!showReceiptBookCreationForm && !showReceiptBookUpdateForm ? (
+              <Input
+                variant="outline"
+                placeholder="Search by Receipt Book Number or Receipt Series"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            ) : (
+              <div className="h-10"></div>
+            )}
           </Box>
 
-          {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-          <Link href={'/books/create'}>
-            <Button colorScheme="green">
-              <BsFileEarmarkPlus />
-              Create Receipt Book
-            </Button>
-          </Link>
+          <Button colorScheme="green" onClick={handleCtaClick} minW={'200'}>
+            {showReceiptBookCreationForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
+            <Text ml={'0.5rem'}>{ctaText}</Text>
+          </Button>
         </div>
 
-        <ReceiptBookTable receiptBooks={receiptBooks} />
+        {showReceiptBookCreationForm ? (
+          <CreateReceiptBookForm />
+        ) : showReceiptBookUpdateForm ? (
+          <UpdateReceiptBookForm receiptBook={receipBookToUpdate as ClientReceiptBook} receiptBookId={receipBookToUpdate.id} />
+        ) : (
+          <ReceiptBookTable receiptBooks={receiptBooks} handleUpdateReceiptBookClick={handleUpdateReceiptBookClick} />
+        )}
       </div>
     </CustomSessionAuth>
   );

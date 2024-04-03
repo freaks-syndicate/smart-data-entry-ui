@@ -94,12 +94,6 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               <Td>{receipt.panNumber}</Td>
               <Td>
                 <div className="flex gap-2">
-                  {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  {/* <Link href={`/books/${receiptBookId}/r/${receipt.id}/edit`}>
-                    <Button colorScheme="blue" size="sm">
-                      <FaEdit />
-                    </Button>
-                  </Link> */}
                   <Button colorScheme="green" size={'sm'} onClick={() => handleUpdateReceiptClick(receipt.id)}>
                     <FaEdit />
                   </Button>

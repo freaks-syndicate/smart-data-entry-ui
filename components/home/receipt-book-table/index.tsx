@@ -10,10 +10,11 @@ import { ReceiptBooksDocument, useDeleteReceiptBookMutation } from '@/utils/type
 
 export interface IReceiptBookTableProps {
   receiptBooks: ClientReceiptBook[];
+  handleUpdateReceiptBookClick: (receipBookId: string) => void;
 }
 
 export default function ReceiptBookTable(props: IReceiptBookTableProps) {
-  const { receiptBooks } = props;
+  const { receiptBooks, handleUpdateReceiptBookClick } = props;
 
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
 
@@ -42,7 +43,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
   if (error) return `Deletion error! ${error.message}`;
 
   return (
-    <Box margin="5" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box margin="1" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Table variant="simple">
         <Thead>
           <Tr bg="gray.200">
@@ -66,12 +67,9 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
               <Td>{receiptBook.financialYear}</Td>
               <Td>
                 <div className="flex gap-2">
-                  {/* FIXME: HTML5 standard discourages use of button inside anchor or vice versa */}
-                  <Link href={`/books/${receiptBook.id}/update`}>
-                    <Button colorScheme="blue" size="sm">
-                      <FaEdit />
-                    </Button>
-                  </Link>
+                  <Button colorScheme="green" size={'sm'} onClick={() => handleUpdateReceiptBookClick(receiptBook.id)}>
+                    <FaEdit />
+                  </Button>
 
                   <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)}>
                     <MdDelete />
