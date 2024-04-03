@@ -94,7 +94,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
         {/* Search and CTA */}
         <div className={cx(styles['d-container__search-cta'])}>
           <Box marginY="20px" width="42%">
-            {!showReceiptCreationForm || !showReceiptUpdateForm ? (
+            {!showReceiptCreationForm && !showReceiptUpdateForm ? (
               <Input
                 variant="outline"
                 placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
