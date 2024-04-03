@@ -98,7 +98,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
             {!showReceiptCreationForm && !showReceiptUpdateForm ? (
               <Input
                 variant="outline"
-                placeholder="Search by Name, Receipt Number, Aadhar Number, Pan Number"
+                placeholder="Search by Name, Receipt Number, Aadhar Number, PAN Number"
                 value={searchQuery}
                 onChange={handleSearchChange}
               />

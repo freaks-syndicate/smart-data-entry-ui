@@ -9,8 +9,6 @@ import { CreateReceiptMutationVariables, ModeOfPayment, ReceiptsDocument, useCre
 import styles from './create-receipt-form.module.scss';
 
 export interface ICreateReceiptFormProps {
-  // receiptFormData: CreateReceiptMutationVariables['item'];
-  // setReceiptFormData: React.Dispatch<React.SetStateAction<CreateReceiptMutationVariables['item']>>;
   receiptBookId: string;
 }
 
@@ -170,7 +168,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <Input
           type="string"
           name="aadharNumber"
-          placeholder="1234 - 1234 - 1234 - 1234"
+          placeholder="E.g. 123412341234"
           maxLength={12}
           value={receiptFormData.aadharNumber !== null ? receiptFormData.aadharNumber : ''}
           onChange={handleChange}
@@ -184,7 +182,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <Input
           type="string"
           name="panNumber"
-          placeholder="ABCDE1234R"
+          placeholder="E.g. ABCDE1234R"
           maxLength={10}
           value={receiptFormData.panNumber ?? undefined}
           onChange={handleChange}
@@ -198,7 +196,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <Input
           type="string"
           name="financialYear"
-          placeholder="2023-2024"
+          placeholder="E.g. 2023-2024"
           value={receiptFormData.financialYear ?? ''}
           onChange={handleChange}
         />
