@@ -113,7 +113,7 @@ export default function CreateReceiptBookForm(props: ICreateReceiptBookFormProps
         <Button colorScheme="green" size="md" disabled={loading} onClick={handleCreateReceiptBookClick}>
           Save
         </Button>
-        <Button colorScheme="red" size="md">
+        <Button colorScheme="red" size="md" onClick={reset}>
           Reset
         </Button>
       </Stack>

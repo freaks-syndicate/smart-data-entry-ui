@@ -10,11 +10,11 @@ export interface IUpdateReceiptBookFormProps {
   receiptBookId: string;
   receiptBookFormData: UpdateReceiptBookMutationVariables['item'];
   setReceiptBookFormData: React.Dispatch<React.SetStateAction<UpdateReceiptBookMutationVariables['item']>>;
-  reset?: () => void;
+  reset: () => void;
 }
 
 export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps) {
-  const { receiptBookId, receiptBookFormData, setReceiptBookFormData } = props;
+  const { receiptBookId, receiptBookFormData, setReceiptBookFormData, reset } = props;
 
   const toast = useToast();
 
@@ -114,7 +114,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
         <Button colorScheme="green" size="md" disabled={loading} onClick={handleUpdateReceiptBookClick}>
           Update
         </Button>
-        <Button colorScheme="red" size="md">
+        <Button colorScheme="red" size="md" onClick={reset}>
           Reset
         </Button>
       </Stack>
