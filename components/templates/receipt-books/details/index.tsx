@@ -29,8 +29,9 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
   const [receiptIdToUpdate, setReceiptIdToUpdate] = useState<string>('');
 
   const nonNullReceipts = receiptBook.receipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
-  const ctaText = showReceiptCreationForm || showReceiptUpdateForm ? 'Back to Receipts' : 'Create Receipt';
   const receipToUpdate = receiptBook.receipts?.filter((receipt) => receipt?.id === receiptIdToUpdate)[0];
+  const pageTitle = showReceiptCreationForm ? 'Create Receipt' : showReceiptUpdateForm ? 'Udpate Receipt' : 'Receipt Book Details';
+  const ctaText = showReceiptCreationForm || showReceiptUpdateForm ? 'Back to Receipts' : 'Create Receipt';
 
   const filterReceipts = (query: string) => {
     if (!query) {
@@ -85,7 +86,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
       <div className={cx(styles['d-container'])}>
         {/* Heading */}
         <Heading textAlign={'center'} mb={'1rem'}>
-          Receipt Book Details
+          {pageTitle}
         </Heading>
 
         {/* Receipt Book Details */}
