@@ -8,13 +8,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
-    const audioContent = body.audioContent;
-    const languageCode = body.languageCode || 'en-US';
+    const formData = await req.formData();
+    const audioFile = formData.get('audioContent') as File; // Assert it's a File
+    const languageCode = (formData.get('languageCode') as string) || 'en-US';
 
-    if (!audioContent) {
+    if (!audioFile) {
       return new NextResponse(JSON.stringify({ error: 'No audio content provided' }), { status: 400 });
     }
+
+    // Convert Blob to base64
+    const buffer = Buffer.from(await audioFile.arrayBuffer());
+    const audioBase64 = buffer.toString('base64');
 
     const speechClient = new speech.SpeechClient({
       projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
@@ -24,10 +28,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const audio = { content: audioContent };
+    const audio = { content: audioBase64 };
     const config = {
       encoding: 'WEBM_OPUS' as const,
-      sampleRateHertz: 16000,
+      sampleRateHertz: 48000,
       languageCode: languageCode || 'en-US',
     };
     const request = {
