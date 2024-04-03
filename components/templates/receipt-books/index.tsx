@@ -30,10 +30,15 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
       return;
     }
 
+    const queryLowercased = query.toLowerCase();
+
     // Filter receipt books, ensuring receipt book is not null before accessing its properties
     const filteredReceiptBooks = initialReceiptBooks?.filter((receiptBook) => {
       if (receiptBook === null) return false; // Skip null receipts
-      return receiptBook.receiptBookNumber?.toString().includes(query) || receiptBook.receiptSeries.toString().includes(query);
+      return (
+        receiptBook.receiptBookNumber?.toString().includes(queryLowercased) ||
+        receiptBook.receiptSeries.toString().includes(queryLowercased)
+      );
     });
 
     setReceiptBooks(filteredReceiptBooks);
