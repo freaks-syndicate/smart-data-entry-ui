@@ -1,5 +1,5 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
-import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 import toUpper from 'lodash/toUpper';
 import { useEffect, useState } from 'react';
@@ -40,18 +40,33 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     // error,
     setSpeechLanguage,
   } = useSpeechToText();
+  const toast = useToast();
 
   const [createReceiptMutation, { loading, error: createReceiptError }] = useCreateReceiptMutation();
+
+  const [realTimeTranscript, setRealTimeTranscript] = useState('');
+  const [activeField, setActiveField] = useState<string | null>(null);
 
   const handleCreateReceiptClick = () => {
     createReceiptMutation({
       variables: { item: receiptFormData },
+      onCompleted: handleCreateReceiptCompletion,
       refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
     });
   };
 
-  const [realTimeTranscript, setRealTimeTranscript] = useState('');
-  const [activeField, setActiveField] = useState<string | null>(null);
+  const handleCreateReceiptCompletion = () => {
+    toast({
+      title: 'Receipt Created',
+      description: 'You have successfully created a new receipt.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+      position: 'bottom-left',
+    });
+
+    reset();
+  };
 
   useEffect(() => {
     if (activeField === 'name' || activeField === 'address') {

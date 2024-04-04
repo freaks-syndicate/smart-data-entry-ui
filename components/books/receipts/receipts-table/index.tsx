@@ -1,4 +1,4 @@
-import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
@@ -18,6 +18,7 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
   const { receipts, receiptBookId, handleUpdateReceiptClick } = props;
 
   const [recordToDelete, setRecordToDelete] = useState<string | null>(null);
+  const toast = useToast();
 
   const [deleteReceiptMutation, { loading, error }] = useDeleteReceiptMutation();
 
@@ -29,10 +30,22 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
     if (recordToDelete) {
       deleteReceiptMutation({
         variables: { deleteReceiptId: recordToDelete },
+        onCompleted: handleDeleteReceiptCompletion,
         refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
       });
       setRecordToDelete(null);
     }
+  };
+
+  const handleDeleteReceiptCompletion = () => {
+    toast({
+      title: 'Receipt Deleted',
+      description: 'Receipt succesfully deleted.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+      position: 'bottom-left',
+    });
   };
 
   const handleDeleteCancel = () => {
