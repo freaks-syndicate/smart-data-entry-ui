@@ -116,14 +116,14 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       </FormControl>
 
       {/* Name */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Name</FormLabel>
         <Input type="test" name="name" value={receiptFormData.name} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
       </FormControl>
 
       {/* Receipt Number */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Receipt Number</FormLabel>
         <Input
           type="number"
@@ -136,13 +136,13 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       </FormControl>
 
       {/* Amount */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Amount</FormLabel>
         <Input type="number" name="amount" value={receiptFormData.amount} onChange={handleChange} />
       </FormControl>
 
       {/* Mode of Payment */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Mode of Payment</FormLabel>
         <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.Cash} onChange={handleChange}>
           <option value={ModeOfPayment.Cash}>Cash</option>
@@ -164,6 +164,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div>
       </FormControl>
 
+      {/* TODO: Add a toggle to either input Aadhar or PAN and store it as itemCode */}
       {/* Aadhar Number */}
       <FormControl position="relative">
         <FormLabel>Aadhar Number</FormLabel>

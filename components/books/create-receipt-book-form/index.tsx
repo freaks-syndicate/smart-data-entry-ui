@@ -73,7 +73,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
   return (
     <Stack spacing={2} direction="column" align="center" className={cx(styles['d-container'])}>
       {/* Receipt Book Number */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Receipt Book Number</FormLabel>
         <Input
           type="number"
@@ -86,13 +86,13 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
       </FormControl>
 
       {/* Receipt Series */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Receipt Series</FormLabel>
         <Input type="number" name="receiptSeries" value={receiptBookFormData.receiptSeries} onChange={handleChange} />
       </FormControl>
 
       {/* Total Receipts */}
-      <FormControl position="relative">
+      <FormControl position="relative" isRequired>
         <FormLabel>Total Receipts</FormLabel>
         <Input
           type="number"
