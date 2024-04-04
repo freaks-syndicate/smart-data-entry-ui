@@ -1,6 +1,7 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
 import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea } from '@chakra-ui/react';
 import cx from 'classnames';
+import toUpper from 'lodash/toUpper';
 import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
@@ -81,6 +82,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         // Parse the input string to a Date object
         const dateValue = new Date(value);
         return { ...prev, [name]: dateValue.toISOString() };
+      } else if (name === 'panNumber') {
+        return { ...prev, [name]: toUpper(value) };
       } else if (type === 'number') {
         return { ...prev, [name]: +value };
       } else {
