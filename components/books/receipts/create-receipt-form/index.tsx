@@ -1,11 +1,17 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
 import { Button, FormControl, FormLabel, Input, Select, Stack, Textarea, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
-import toUpper from 'lodash/toUpper';
 import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
-import { CreateReceiptMutationVariables, ModeOfPayment, ReceiptsDocument, useCreateReceiptMutation } from '@/utils/types/generated/graphql';
+import { updateFormData } from '@/utils/functions/form-helper';
+import {
+  CreateReceipt,
+  CreateReceiptMutationVariables,
+  ModeOfPayment,
+  ReceiptsDocument,
+  useCreateReceiptMutation,
+} from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-form.module.scss';
 
@@ -85,26 +91,31 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     setRealTimeTranscript('');
   }, [activeField]);
 
+  useEffect(() => {
+    const numberInputs = document.querySelectorAll('input[type=number]');
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+    };
+
+    numberInputs.forEach((input) => {
+      input.addEventListener('wheel', preventScroll as EventListener);
+    });
+
+    return () => {
+      numberInputs.forEach((input) => {
+        input.removeEventListener('wheel', preventScroll as EventListener);
+      });
+    };
+  }, []);
+
   if (createReceiptError) {
     // TODO: Gracefully handle error
     console.error(createReceiptError);
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = event.target;
-    setReceiptFormData((prev) => {
-      if (name === 'date') {
-        // Parse the input string to a Date object
-        const dateValue = new Date(value);
-        return { ...prev, [name]: dateValue.toISOString() };
-      } else if (name === 'panNumber') {
-        return { ...prev, [name]: toUpper(value) };
-      } else if (type === 'number') {
-        return { ...prev, [name]: +value };
-      } else {
-        return { ...prev, [name]: value };
-      }
-    });
+    const { name, value, type } = event.target as { name: keyof CreateReceipt; value: string; type: string };
+    setReceiptFormData((prev) => updateFormData<CreateReceipt>(prev, name, value, type));
   };
 
   const handleSpeechClick = (fieldName: string) => {
@@ -136,7 +147,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       {/* Name */}
       <FormControl position="relative" isRequired>
         <FormLabel>Name</FormLabel>
-        <Input type="test" name="name" value={receiptFormData.name} onChange={handleChange} />
+        <Input type="text" name="name" value={receiptFormData.name} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
       </FormControl>
 
@@ -147,6 +158,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
           type="number"
           name="receiptNumber"
           maxLength={10}
+          min={1}
           value={receiptFormData.receiptNumber !== null ? receiptFormData.receiptNumber : ''}
           onChange={handleChange}
         />
@@ -156,7 +168,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
       {/* Amount */}
       <FormControl position="relative" isRequired>
         <FormLabel>Amount</FormLabel>
-        <Input type="number" name="amount" value={receiptFormData.amount} onChange={handleChange} />
+        <Input type="number" name="amount" min={1} value={receiptFormData.amount} onChange={handleChange} />
       </FormControl>
 
       {/* Mode of Payment */}
@@ -176,6 +188,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
           type="string"
           name="mobileNumber"
           maxLength={10}
+          pattern="^[6-9]\d{9}$"
+          inputMode="numeric"
           value={receiptFormData.mobileNumber !== null ? receiptFormData.mobileNumber : ''}
           onChange={handleChange}
         />

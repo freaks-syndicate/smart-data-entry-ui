@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
+import { updateFormData } from '@/utils/functions/form-helper';
 import { ClientReceipt } from '@/utils/types';
-import { ModeOfPayment, ReceiptsDocument, UpdateReceiptMutationVariables, useUpdateReceiptMutation } from '@/utils/types/generated/graphql';
+import { ModeOfPayment, ReceiptsDocument, UpdateReceipt, useUpdateReceiptMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-form.module.scss';
 
@@ -18,7 +19,7 @@ export interface IUpdateReceiptFormProps {
 export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   const { receipt, receiptBookId } = props;
 
-  const INITIAL_RECEIPT_FORM_DATA: UpdateReceiptMutationVariables['item'] = {
+  const INITIAL_RECEIPT_FORM_DATA: UpdateReceipt = {
     aadharNumber: receipt.aadharNumber,
     address: receipt.address,
     amount: receipt.amount,
@@ -43,7 +44,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   } = useSpeechToText();
   const [updateReceiptMutation, { loading, error: updateReceiptError }] = useUpdateReceiptMutation();
 
-  const [receiptFormData, setReceiptFormData] = useState<UpdateReceiptMutationVariables['item']>(INITIAL_RECEIPT_FORM_DATA);
+  const [receiptFormData, setReceiptFormData] = useState<UpdateReceipt>(INITIAL_RECEIPT_FORM_DATA);
   const [realTimeTranscript, setRealTimeTranscript] = useState('');
   const [activeField, setActiveField] = useState<string | null>(null);
 
@@ -84,22 +85,6 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     });
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = event.target;
-    setReceiptFormData((prev) => {
-      if (name === 'date') {
-        // Parse the input string to a Date object
-        const dateValue = new Date(value);
-        return { ...prev, [name]: dateValue.toISOString() };
-      } else if (type === 'number') {
-        // FIXME: Mobile number should in string, fails the update query
-        return { ...prev, [name]: +value };
-      } else {
-        return { ...prev, [name]: value };
-      }
-    });
-  };
-
   useEffect(() => {
     if (activeField === 'name' || activeField === 'address') {
       setSpeechLanguage('mr-IN');
@@ -116,6 +101,29 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   useEffect(() => {
     setRealTimeTranscript('');
   }, [activeField]);
+
+  // TODO: Check if this can be applied at the root level
+  useEffect(() => {
+    const numberInputs = document.querySelectorAll('input[type=number]');
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+    };
+
+    numberInputs.forEach((input) => {
+      input.addEventListener('wheel', preventScroll as EventListener);
+    });
+
+    return () => {
+      numberInputs.forEach((input) => {
+        input.removeEventListener('wheel', preventScroll as EventListener);
+      });
+    };
+  }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = event.target as { name: keyof UpdateReceipt; value: string; type: string };
+    setReceiptFormData((prev) => updateFormData<UpdateReceipt>(prev, name, value, type));
+  };
 
   if (updateReceiptError) {
     console.error(updateReceiptError);
@@ -137,7 +145,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Name */}
       <FormControl position="relative">
         <FormLabel>Name</FormLabel>
-        <Input type="test" name="name" value={receiptFormData.name ?? ''} onChange={handleChange} />
+        <Input type="text" name="name" value={receiptFormData.name ?? ''} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
       </FormControl>
 
@@ -148,6 +156,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
           type="number"
           name="receiptNumber"
           maxLength={10}
+          min={1}
           value={receiptFormData.receiptNumber !== null ? receiptFormData.receiptNumber : ''}
           onChange={handleChange}
         />
@@ -157,7 +166,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Amount */}
       <FormControl position="relative">
         <FormLabel>Amount</FormLabel>
-        <Input type="number" name="amount" value={receiptFormData.amount ?? 0} onChange={handleChange} />
+        <Input type="number" name="amount" min={1} value={receiptFormData.amount ?? 0} onChange={handleChange} />
       </FormControl>
 
       {/* Mode of Payment */}
@@ -177,6 +186,8 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
           type="number"
           name="mobileNumber"
           maxLength={10}
+          pattern="^[6-9]\d{9}$"
+          inputMode="numeric"
           value={receiptFormData.mobileNumber !== null ? receiptFormData.mobileNumber : ''}
           onChange={handleChange}
         />

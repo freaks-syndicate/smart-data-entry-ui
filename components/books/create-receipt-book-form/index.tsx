@@ -1,8 +1,14 @@
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { CreateReceiptBookMutationVariables, ReceiptBooksDocument, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
+import { updateFormData } from '@/utils/functions/form-helper';
+import {
+  CreateReceiptBook,
+  CreateReceiptBookMutationVariables,
+  ReceiptBooksDocument,
+  useCreateReceiptBookMutation,
+} from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-book-form.module.scss';
 
@@ -17,8 +23,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
   };
 
   const toast = useToast();
-  const [receiptBookFormData, setReceiptBookFormData] =
-    useState<CreateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
+  const [receiptBookFormData, setReceiptBookFormData] = useState<CreateReceiptBook>(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const [createReceiptBookMutation, { loading, error: createReceiptBookError }] = useCreateReceiptBookMutation();
 
@@ -52,19 +57,26 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = event.target;
-    setReceiptBookFormData((prev) => {
-      if (name === 'date') {
-        // Parse the input string to a Date object
-        const dateValue = new Date(value);
-        return { ...prev, [name]: dateValue.toISOString() };
-      } else if (type === 'number') {
-        return { ...prev, [name]: +value };
-      } else {
-        return { ...prev, [name]: value };
-      }
-    });
+    const { name, value, type } = event.target as { name: keyof CreateReceiptBook; value: string; type: string };
+    setReceiptBookFormData((prev) => updateFormData<CreateReceiptBook>(prev, name, value, type));
   };
+
+  useEffect(() => {
+    const numberInputs = document.querySelectorAll('input[type=number]');
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+    };
+
+    numberInputs.forEach((input) => {
+      input.addEventListener('wheel', preventScroll as EventListener);
+    });
+
+    return () => {
+      numberInputs.forEach((input) => {
+        input.removeEventListener('wheel', preventScroll as EventListener);
+      });
+    };
+  }, []);
 
   if (createReceiptBookError) {
     console.error(createReceiptBookError);
@@ -79,6 +91,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
           type="number"
           name="receiptBookNumber"
           maxLength={10}
+          min={1}
           value={receiptBookFormData.receiptBookNumber !== null ? receiptBookFormData.receiptBookNumber : ''}
           onChange={handleChange}
         />
@@ -88,7 +101,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
       {/* Receipt Series */}
       <FormControl position="relative" isRequired>
         <FormLabel>Receipt Series</FormLabel>
-        <Input type="number" name="receiptSeries" value={receiptBookFormData.receiptSeries} onChange={handleChange} />
+        <Input type="number" name="receiptSeries" min={1} value={receiptBookFormData.receiptSeries} onChange={handleChange} />
       </FormControl>
 
       {/* Total Receipts */}
@@ -97,6 +110,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
         <Input
           type="number"
           name="totalReceipts"
+          min={1}
           value={receiptBookFormData.totalReceipts !== null ? receiptBookFormData.totalReceipts : ''}
           onChange={handleChange}
         />

@@ -1,10 +1,11 @@
 import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
+import { updateFormData } from '@/utils/functions/form-helper';
 import { ClientReceiptBook } from '@/utils/types';
-import { ReceiptBookDocument, UpdateReceiptBookMutationVariables, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
+import { ReceiptBookDocument, UpdateReceiptBook, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-book-form.module.scss';
 
@@ -16,7 +17,7 @@ export interface IUpdateReceiptBookFormProps {
 export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps) {
   const { receiptBookId, receiptBook } = props;
 
-  const INITIAL_RECEIPT_BOOK_FORM_DATA: UpdateReceiptBookMutationVariables['item'] = {
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: UpdateReceiptBook = {
     receiptBookNumber: receiptBook.receiptBookNumber,
     financialYear: receiptBook.financialYear,
     receiptSeries: receiptBook.receiptSeries,
@@ -26,8 +27,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
   const toast = useToast();
   const [updateReceiptBookMutation, { loading, error: updateReceiptBookError }] = useUpdateReceiptBookMutation();
 
-  const [receiptBookFormData, setReceiptBookFormData] =
-    useState<UpdateReceiptBookMutationVariables['item']>(INITIAL_RECEIPT_BOOK_FORM_DATA);
+  const [receiptBookFormData, setReceiptBookFormData] = useState<UpdateReceiptBook>(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
   const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
 
@@ -58,19 +58,26 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = event.target;
-    setReceiptBookFormData((prev) => {
-      if (name === 'date') {
-        // Parse the input string to a Date object
-        const dateValue = new Date(value);
-        return { ...prev, [name]: dateValue.toISOString() };
-      } else if (type === 'number') {
-        return { ...prev, [name]: +value };
-      } else {
-        return { ...prev, [name]: value };
-      }
-    });
+    const { name, value, type } = event.target as { name: keyof UpdateReceiptBook; value: string; type: string };
+    setReceiptBookFormData((prev) => updateFormData<UpdateReceiptBook>(prev, name, value, type));
   };
+
+  useEffect(() => {
+    const numberInputs = document.querySelectorAll('input[type=number]');
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+    };
+
+    numberInputs.forEach((input) => {
+      input.addEventListener('wheel', preventScroll as EventListener);
+    });
+
+    return () => {
+      numberInputs.forEach((input) => {
+        input.removeEventListener('wheel', preventScroll as EventListener);
+      });
+    };
+  }, []);
 
   if (updateReceiptBookError) {
     console.error(updateReceiptBookError);
@@ -85,6 +92,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
           type="number"
           name="receiptBookNumber"
           maxLength={10}
+          min={1}
           value={receiptBookFormData.receiptBookNumber !== null ? receiptBookFormData.receiptBookNumber : ''}
           onChange={handleChange}
         />
@@ -94,7 +102,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
       {/* Receipt Series */}
       <FormControl position="relative">
         <FormLabel>Receipt Series</FormLabel>
-        <Input type="number" name="receiptSeries" value={receiptBookFormData.receiptSeries ?? 0} onChange={handleChange} />
+        <Input type="number" name="receiptSeries" min={1} value={receiptBookFormData.receiptSeries ?? 0} onChange={handleChange} />
       </FormControl>
 
       {/* Total Receipts */}
@@ -103,6 +111,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
         <Input
           type="number"
           name="totalReceipts"
+          min={1}
           value={receiptBookFormData.totalReceipts !== null ? receiptBookFormData.totalReceipts : ''}
           onChange={handleChange}
         />
