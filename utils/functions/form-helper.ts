@@ -34,7 +34,17 @@ const handleNumberInput = <T>(formData: T, fieldName: keyof T, value: string): T
 };
 
 const handleDateInput = <T>(formData: T, fieldName: keyof T, value: string): T => {
-  const dateValue = new Date(value).toISOString();
+  const date = new Date(value);
+  let dateValue: string;
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    // getTime() returns NaN if the date is invalid
+    dateValue = formData[fieldName] as unknown as string; // Preserves the current field value if invalid input is provided
+  } else {
+    dateValue = date.toISOString();
+  }
+
   return { ...formData, [fieldName]: dateValue } as T;
 };
 
