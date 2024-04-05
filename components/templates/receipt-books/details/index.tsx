@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Input, Text } from '@chakra-ui/react';
 import cx from 'classnames';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { BsArrowLeft, BsFileEarmarkPlus } from 'react-icons/bs';
 
 import CustomSessionAuth from '@/components/auth/custom-session-auth';
@@ -19,30 +19,34 @@ export interface IReceiptBookDetailsTemplateProps {
 let timer: ReturnType<typeof setTimeout>;
 
 export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTemplateProps) {
-  const { receiptBook: initialReceiptBook } = props;
+  const { receiptBook } = props;
   const debounceTime = 300;
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [receiptBook, setReceiptBook] = useState<ClientReceiptBook>(initialReceiptBook);
   const [showReceiptCreationForm, setShowReceiptCreationForm] = useState<boolean>(false);
   const [showReceiptUpdateForm, setShowReceiptUpdateForm] = useState<boolean>(false);
   const [receiptIdToUpdate, setReceiptIdToUpdate] = useState<string>('');
+  const [filteredReceipts, setFilteredReceipts] = useState<ClientReceiptBook['receipts']>(receiptBook.receipts);
 
-  const nonNullReceipts = receiptBook.receipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
+  useEffect(() => {
+    setFilteredReceipts(receiptBook.receipts);
+  }, [receiptBook.receipts]);
+
+  const nonNullReceipts = filteredReceipts?.filter((receipt): receipt is ClientReceipt => receipt !== null) ?? [];
   const receipToUpdate = receiptBook.receipts?.filter((receipt) => receipt?.id === receiptIdToUpdate)[0];
   const pageTitle = showReceiptCreationForm ? 'Create Receipt' : showReceiptUpdateForm ? 'Udpate Receipt' : 'Receipt Book Details';
   const ctaText = showReceiptCreationForm || showReceiptUpdateForm ? 'Back to Receipts' : 'Create Receipt';
 
   const filterReceipts = (query: string) => {
     if (!query) {
-      setReceiptBook(initialReceiptBook);
+      setFilteredReceipts(() => receiptBook.receipts);
       return;
     }
 
     const queryLowercased = query.toLowerCase();
 
     // Filter receipts, ensuring receipt is not null before accessing its properties
-    const filteredReceipts = initialReceiptBook.receipts?.filter((receipt) => {
+    const filteredReceipts = receiptBook.receipts?.filter((receipt) => {
       if (receipt === null) return false; // Skip null receipts
       return (
         receipt.name?.toLowerCase().includes(queryLowercased) ||
@@ -52,10 +56,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
       );
     });
 
-    setReceiptBook((prevReceiptBook) => ({
-      ...prevReceiptBook,
-      receipts: filteredReceipts ?? [],
-    }));
+    setFilteredReceipts(() => filteredReceipts);
   };
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
