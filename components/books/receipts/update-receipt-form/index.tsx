@@ -7,7 +7,7 @@ import { useSpeechToText } from '@/hooks/useSpeechToText';
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
 import { updateFormData } from '@/utils/functions/form-helper';
 import { ClientReceipt } from '@/utils/types';
-import { ModeOfPayment, ReceiptsDocument, UpdateReceipt, useUpdateReceiptMutation } from '@/utils/types/generated/graphql';
+import { ModeOfPayment, ReceiptBookDocument, UpdateReceipt, useUpdateReceiptMutation } from '@/utils/types/generated/graphql';
 
 import styles from './update-receipt-form.module.scss';
 
@@ -81,7 +81,14 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     updateReceiptMutation({
       variables: { updateReceiptId: receipt.id, item: payload },
       onCompleted: handleReceiptCompletion,
-      refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
+      refetchQueries: [
+        {
+          query: ReceiptBookDocument,
+          variables: {
+            where: { id: receiptBookId },
+          },
+        },
+      ],
     });
   };
 

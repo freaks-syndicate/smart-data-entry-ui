@@ -6,7 +6,7 @@ import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
 import { ClientReceipt } from '@/utils/types';
-import { Receipt, ReceiptBook, ReceiptsDocument, useDeleteReceiptMutation } from '@/utils/types/generated/graphql';
+import { Receipt, ReceiptBook, ReceiptBookDocument, useDeleteReceiptMutation } from '@/utils/types/generated/graphql';
 
 export interface IReceiptsTableProps {
   receiptBookId: ReceiptBook['id'];
@@ -31,7 +31,14 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
       deleteReceiptMutation({
         variables: { deleteReceiptId: recordToDelete },
         onCompleted: handleDeleteReceiptCompletion,
-        refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
+        refetchQueries: [
+          {
+            query: ReceiptBookDocument,
+            variables: {
+              where: { id: receiptBookId },
+            },
+          },
+        ],
       });
       setRecordToDelete(null);
     }

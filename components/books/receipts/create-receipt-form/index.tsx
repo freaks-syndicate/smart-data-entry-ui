@@ -5,13 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import { updateFormData } from '@/utils/functions/form-helper';
-import {
-  CreateReceipt,
-  CreateReceiptMutationVariables,
-  ModeOfPayment,
-  ReceiptsDocument,
-  useCreateReceiptMutation,
-} from '@/utils/types/generated/graphql';
+import { CreateReceipt, ModeOfPayment, ReceiptBookDocument, useCreateReceiptMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-form.module.scss';
 
@@ -22,7 +16,7 @@ export interface ICreateReceiptFormProps {
 export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   const { receiptBookId } = props;
 
-  const INITIAL_RECEIPT_FORM_DATA: CreateReceiptMutationVariables['item'] = {
+  const INITIAL_RECEIPT_FORM_DATA: CreateReceipt = {
     receiptNumber: 0,
     name: '',
     financialYear: '',
@@ -36,7 +30,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     receiptBookId: receiptBookId,
   };
 
-  const [receiptFormData, setReceiptFormData] = useState<CreateReceiptMutationVariables['item']>(INITIAL_RECEIPT_FORM_DATA);
+  const [receiptFormData, setReceiptFormData] = useState<CreateReceipt>(INITIAL_RECEIPT_FORM_DATA);
 
   const {
     transcript,
@@ -57,7 +51,14 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     createReceiptMutation({
       variables: { item: receiptFormData },
       onCompleted: handleCreateReceiptCompletion,
-      refetchQueries: [{ query: ReceiptsDocument, variables: { paginate: { page: 0, pageSize: 10 } } }],
+      refetchQueries: [
+        {
+          query: ReceiptBookDocument,
+          variables: {
+            where: { id: receiptBookId },
+          },
+        },
+      ],
     });
   };
 
