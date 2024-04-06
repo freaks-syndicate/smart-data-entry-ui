@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import { filterNonNullFields } from '@/utils/functions/filter-non-null-fields';
 import { updateFormData } from '@/utils/functions/form-helper';
+import { validateCreateReceiptBookFormData } from '@/utils/functions/form-validations';
 import { ClientReceiptBook } from '@/utils/types';
 import { ReceiptBookDocument, UpdateReceiptBook, useUpdateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
-import { validateCreateReceiptBookFormData } from '../create-receipt-book-form/helper';
 import styles from './update-receipt-book-form.module.scss';
 
 export interface IUpdateReceiptBookFormProps {
@@ -65,7 +65,7 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
       onCompleted: handleReceiptBookCompletion,
       onError: (apiError) => {
         // You can refine this by checking apiError.graphQLErrors and apiError.networkError
-        const message = apiError.message || 'An error occurred while creating the receipt book.';
+        const message = apiError.message || 'An error occurred while updating the receipt book.';
         toast({
           title: 'Error',
           description: message,
