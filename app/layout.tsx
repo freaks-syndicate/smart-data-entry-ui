@@ -1,6 +1,7 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
+import NextTopLoader from 'nextjs-toploader';
 
 import Footer from '@/components/footer/index';
 import Nav from '@/components/header/Header';
@@ -24,6 +25,7 @@ export default function RootLayout({
       </head>
       <body className="pt-16">
         <Providers>
+          <NextTopLoader crawl={true} easing="ease" />
           <Nav />
           {children}
           <Footer />
