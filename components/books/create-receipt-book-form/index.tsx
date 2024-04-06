@@ -1,21 +1,17 @@
-import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 import { useEffect, useState } from 'react';
 
 import { updateFormData } from '@/utils/functions/form-helper';
-import {
-  CreateReceiptBook,
-  CreateReceiptBookMutationVariables,
-  ReceiptBooksDocument,
-  useCreateReceiptBookMutation,
-} from '@/utils/types/generated/graphql';
+import { CreateReceiptBook, ReceiptBooksDocument, useCreateReceiptBookMutation } from '@/utils/types/generated/graphql';
 
 import styles from './create-receipt-book-form.module.scss';
+import { validateCreateReceiptBookFormData } from './helper';
 
 export interface ICreateReceiptBookFormProps {}
 
 export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProps) {
-  const INITIAL_RECEIPT_BOOK_FORM_DATA: CreateReceiptBookMutationVariables['item'] = {
+  const INITIAL_RECEIPT_BOOK_FORM_DATA: CreateReceiptBook = {
     receiptBookNumber: 0,
     financialYear: '',
     receiptSeries: 0,
@@ -24,16 +20,36 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
 
   const toast = useToast();
   const [receiptBookFormData, setReceiptBookFormData] = useState<CreateReceiptBook>(INITIAL_RECEIPT_BOOK_FORM_DATA);
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [createReceiptBookMutation, { loading, error: createReceiptBookError }] = useCreateReceiptBookMutation();
 
-  const reset = () => setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
+  const reset = () => {
+    setReceiptBookFormData(INITIAL_RECEIPT_BOOK_FORM_DATA);
+    setErrors({});
+  };
 
   const handleCreateReceiptBookClick = () => {
-    // TODO: Handle various errors
+    const formErrors = validateCreateReceiptBookFormData(receiptBookFormData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     createReceiptBookMutation({
       variables: { item: receiptBookFormData },
       onCompleted: handleReceiptBookCompletion,
+      onError: (apiError) => {
+        // You can refine this by checking apiError.graphQLErrors and apiError.networkError
+        const message = apiError.message || 'An error occurred while creating the receipt book.';
+        toast({
+          title: 'Error',
+          description: message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+          position: 'bottom-left',
+        });
+      },
       refetchQueries: [
         {
           query: ReceiptBooksDocument,
@@ -85,7 +101,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
   return (
     <Stack spacing={2} direction="column" align="center" className={cx(styles['d-container'])}>
       {/* Receipt Book Number */}
-      <FormControl position="relative" isRequired>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.receiptBookNumber)}>
         <FormLabel>Receipt Book Number</FormLabel>
         <Input
           type="number"
@@ -95,17 +111,19 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
           value={receiptBookFormData.receiptBookNumber !== null ? receiptBookFormData.receiptBookNumber : ''}
           onChange={handleChange}
         />
+        {errors.receiptBookNumber && <FormErrorMessage>{errors.receiptBookNumber}</FormErrorMessage>}
         {/* <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div> */}
       </FormControl>
 
       {/* Receipt Series */}
-      <FormControl position="relative" isRequired>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.receiptSeries)}>
         <FormLabel>Receipt Series</FormLabel>
         <Input type="number" name="receiptSeries" min={1} value={receiptBookFormData.receiptSeries} onChange={handleChange} />
+        {errors.receiptSeries && <FormErrorMessage>{errors.receiptSeries}</FormErrorMessage>}
       </FormControl>
 
       {/* Total Receipts */}
-      <FormControl position="relative" isRequired>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.totalReceipts)}>
         <FormLabel>Total Receipts</FormLabel>
         <Input
           type="number"
@@ -114,11 +132,12 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
           value={receiptBookFormData.totalReceipts !== null ? receiptBookFormData.totalReceipts : ''}
           onChange={handleChange}
         />
+        {errors.totalReceipts && <FormErrorMessage>{errors.totalReceipts}</FormErrorMessage>}
         {/* <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div> */}
       </FormControl>
 
       {/* Financial Year */}
-      <FormControl position={'relative'}>
+      <FormControl position={'relative'} isInvalid={Boolean(errors.financialYear)}>
         <FormLabel>Financial Year</FormLabel>
         <Input
           type="string"
@@ -127,6 +146,7 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
           value={receiptBookFormData?.financialYear ?? ''}
           onChange={handleChange}
         />
+        {errors.financialYear && <FormErrorMessage>{errors.financialYear}</FormErrorMessage>}
       </FormControl>
 
       <Stack spacing={4} direction="row" width="100%" justifyContent="flex-end">
