@@ -2,7 +2,6 @@ import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
 import { ClientReceiptBook } from '@/utils/types';
@@ -21,6 +20,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
 
   const [deleteReceiptBookMutation, { loading, error }] = useDeleteReceiptBookMutation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDelete = (receiptBookId: ClientReceiptBook['id']) => {
     setRecordToDelete(receiptBookId);
   };
@@ -84,9 +84,10 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
                     <FaEdit />
                   </Button>
 
-                  <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)}>
+                  {/* TODO: TBD is delete receipt book needed? */}
+                  {/* <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)}>
                     <MdDelete />
-                  </Button>
+                  </Button> */}
                 </div>
               </Td>
             </Tr>
