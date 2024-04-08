@@ -77,6 +77,8 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     }
   };
 
+  useEffect(() => () => clearTimeout(timer), []);
+
   const handleUpdateReceiptClick = (receiptId: string) => {
     setShowReceiptUpdateForm((prev) => !prev);
     setReceiptIdToUpdate(receiptId);
