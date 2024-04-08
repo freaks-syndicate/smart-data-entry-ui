@@ -18,13 +18,13 @@ export interface IAppProps {
 let timer: ReturnType<typeof setTimeout>;
 
 export default function ReceiptBooksTemplate(props: IAppProps) {
-  const { receiptBooks: initialReceiptBooks } = props;
+  const { receiptBooks } = props;
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [receiptBooks, setReceiptBooks] = useState<ClientReceiptBook[]>(initialReceiptBooks);
   const [showReceiptBookCreationForm, setShowReceiptBookCreationForm] = useState<boolean>(false);
   const [showReceiptBookUpdateForm, setShowReceiptBookUpdateForm] = useState<boolean>(false);
   const [receiptIdToUpdate, setReceiptIdToUpdate] = useState<string>('');
+  const [filteredReceiptBooks, setFilteredReceiptBooks] = useState<ClientReceiptBook[]>(receiptBooks);
 
   const debounceTime = 300;
   const pageTitle = showReceiptBookCreationForm
@@ -37,14 +37,14 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
 
   const filterReceiptBooks = (query: string) => {
     if (!query) {
-      setReceiptBooks(initialReceiptBooks);
+      setFilteredReceiptBooks(receiptBooks);
       return;
     }
 
     const queryLowercased = query.toLowerCase();
 
     // Filter receipt books, ensuring receipt book is not null before accessing its properties
-    const filteredReceiptBooks = initialReceiptBooks?.filter((receiptBook) => {
+    const filteredReceiptBooks = receiptBooks?.filter((receiptBook) => {
       if (receiptBook === null) return false; // Skip null receipts
       return (
         receiptBook.receiptBookNumber?.toString().includes(queryLowercased) ||
@@ -52,7 +52,7 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
       );
     });
 
-    setReceiptBooks(filteredReceiptBooks);
+    setFilteredReceiptBooks(filteredReceiptBooks);
   };
 
   const handleCtaClick = () => {
@@ -73,12 +73,16 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
     timer = setTimeout(() => filterReceiptBooks(query), debounceTime);
   };
 
-  useEffect(() => () => clearTimeout(timer), []);
-
   const handleUpdateReceiptBookClick = (receiptId: string) => {
     setShowReceiptBookUpdateForm((prev) => !prev);
     setReceiptIdToUpdate(receiptId);
   };
+
+  useEffect(() => {
+    setFilteredReceiptBooks(receiptBooks);
+  }, [receiptBooks]);
+
+  useEffect(() => () => clearTimeout(timer), []);
 
   return (
     <CustomSessionAuth>
@@ -114,7 +118,7 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
         ) : showReceiptBookUpdateForm ? (
           <UpdateReceiptBookForm receiptBook={receipBookToUpdate as ClientReceiptBook} receiptBookId={receipBookToUpdate.id} />
         ) : (
-          <ReceiptBookTable receiptBooks={receiptBooks} handleUpdateReceiptBookClick={handleUpdateReceiptBookClick} />
+          <ReceiptBookTable receiptBooks={filteredReceiptBooks} handleUpdateReceiptBookClick={handleUpdateReceiptBookClick} />
         )}
       </div>
     </CustomSessionAuth>
