@@ -42,7 +42,6 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   const toast = useToast();
   const [createReceiptMutation, { loading, error: createReceiptError }] = useCreateReceiptMutation();
   const [receiptFormData, setReceiptFormData] = useState<CreateReceipt>(INITIAL_RECEIPT_FORM_DATA);
-  const [realTimeTranscript, setRealTimeTranscript] = useState('');
   const [activeField, setActiveField] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -93,21 +92,19 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   };
 
   useEffect(() => {
-    if (activeField === 'name' || activeField === 'address') {
-      setSpeechLanguage('mr-IN');
-    } else {
-      setSpeechLanguage('en-US');
-    }
-    // Update the real-time transcript display while listening
     if (isListening && activeField !== null) {
-      setRealTimeTranscript(transcript);
-      setReceiptFormData((prev) => ({ ...prev, [activeField]: realTimeTranscript }));
+      // Determine the type of the active field for validation
+      let fieldType = 'text'; // Default to text if not a special case
+      if (activeField === 'receiptNumber' || activeField === 'amount') {
+        fieldType = 'number';
+      } else if (activeField === 'date') {
+        fieldType = 'date';
+      }
+      // Use the utility function to update the form data with validation
+      const updatedFormData = updateFormData(receiptFormData, activeField as keyof CreateReceipt, transcript, fieldType);
+      setReceiptFormData(updatedFormData);
     }
-  }, [transcript, isListening, realTimeTranscript, activeField, setSpeechLanguage, setReceiptFormData]);
-
-  useEffect(() => {
-    setRealTimeTranscript('');
-  }, [activeField]);
+  }, [transcript, isListening, activeField, receiptFormData]);
 
   useEffect(() => {
     const numberInputs = document.querySelectorAll('input[type=number]');
@@ -126,6 +123,14 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
     };
   }, []);
 
+  useEffect(
+    () => () => {
+      stopListening();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   if (createReceiptError) {
     // TODO: Gracefully handle error
     console.error(createReceiptError);
@@ -137,9 +142,23 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   };
 
   const handleSpeechClick = (fieldName: string) => {
-    setRealTimeTranscript('');
-    setActiveField(fieldName);
-    isListening ? stopListening() : startListening();
+    if (isListening) {
+      if (activeField === fieldName) {
+        stopListening(); // Stop listening if the current active field's mic icon is clicked
+      } else {
+        // If another field's mic icon is clicked, switch the active field
+        setActiveField(fieldName);
+        // No need to call stopListening or startListening since it's already listening
+      }
+    } else {
+      if (fieldName === 'name' || fieldName === 'address') {
+        setSpeechLanguage('mr-IN');
+      } else {
+        setSpeechLanguage('en-US');
+      }
+      startListening();
+      setActiveField(fieldName); // Set the new active field and start listening
+    }
   };
 
   const renderSpeechIcon = (fieldName: string) => (
@@ -185,7 +204,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
           value={receiptFormData.receiptNumber !== null ? receiptFormData.receiptNumber : ''}
           onChange={handleChange}
         />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('mobileNumber')}</div>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('receiptNumber')}</div>
         {errors.receiptNumber && <FormErrorMessage>{errors.receiptNumber}</FormErrorMessage>}
       </FormControl>
 

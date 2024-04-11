@@ -26,11 +26,14 @@ export const updateFormData = <T>(formData: T, fieldName: keyof T, value: string
 };
 
 const handleNumberInput = <T>(formData: T, fieldName: keyof T, value: string): T => {
-  const numValue = Number(value);
-  if (numValue < 1) {
-    return { ...formData, [fieldName]: 1 } as T;
-  }
-  return { ...formData, [fieldName]: numValue } as T;
+  // Remove all whitespace from the value before converting to a number
+  const trimmedValue = value.replace(/\s+/g, '');
+  const numValue = Number(trimmedValue);
+
+  // Ensure the number is not less than 1
+  const validatedValue = numValue < 1 ? 1 : numValue;
+
+  return { ...formData, [fieldName]: validatedValue } as T;
 };
 
 const handleDateInput = <T>(formData: T, fieldName: keyof T, value: string): T => {
@@ -49,12 +52,13 @@ const handleDateInput = <T>(formData: T, fieldName: keyof T, value: string): T =
 };
 
 const handleTextInput = <T>(formData: T, fieldName: keyof T, value: string): T => {
+  let trimmedValue = value.trim();
   if (fieldName === 'panNumber') {
-    return { ...formData, [fieldName]: toUpper(value) } as T;
+    // For PAN number, convert to uppercase and remove all spaces
+    trimmedValue = toUpper(trimmedValue.replace(/\s+/g, ''));
+  } else if (fieldName === 'mobileNumber' || fieldName === 'aadharNumber') {
+    // For mobile and Aadhar numbers, remove all non-digit characters and spaces
+    trimmedValue = trimmedValue.replace(/\D+/g, '');
   }
-  if (fieldName === 'mobileNumber') {
-    const filteredValue = value.replace(/\D/g, '');
-    return { ...formData, [fieldName]: filteredValue };
-  }
-  return { ...formData, [fieldName]: value } as T;
+  return { ...formData, [fieldName]: trimmedValue } as T;
 };
