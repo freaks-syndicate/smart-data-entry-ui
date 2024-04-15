@@ -1,5 +1,5 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons';
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Select, Stack, Textarea, useToast } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Select, Stack, Switch, Textarea, useToast } from '@chakra-ui/react';
 import cx from 'classnames';
 import { useEffect, useState } from 'react';
 
@@ -32,6 +32,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     panNumber: receipt.panNumber,
     receiptBookId: receiptBookId,
     receiptNumber: receipt.receiptNumber,
+    cancelled: receipt.cancelled,
   };
 
   const toast = useToast();
@@ -150,7 +151,14 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target as { name: keyof UpdateReceipt; value: string; type: string };
-    setReceiptFormData((prev) => updateFormData<UpdateReceipt>(prev, name, value, type));
+
+    if (type === 'checkbox') {
+      const isChecked = (event.target as HTMLInputElement).checked;
+      setReceiptFormData((prev) => ({ ...prev, [name]: isChecked }));
+    } else {
+      // Handle other input types (text, textarea, select)
+      setReceiptFormData((prev) => updateFormData<UpdateReceipt>(prev, name, value, type));
+    }
   };
 
   if (updateReceiptError) {
@@ -283,6 +291,20 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('address')}</div>
         {errors.address && <FormErrorMessage>{errors.address}</FormErrorMessage>}
+      </FormControl>
+
+      <FormControl display="flex" alignItems="center">
+        <FormLabel htmlFor="cancelled-receipt-switch" mb="0">
+          Cancelled?
+        </FormLabel>
+        <Switch
+          colorScheme="red"
+          size="md"
+          name="cancelled"
+          id="cancelled-receipt-switch"
+          isChecked={receiptFormData.cancelled ?? false}
+          onChange={handleChange}
+        />
       </FormControl>
 
       <Stack spacing={4} direction="row" width="100%" justifyContent="flex-end">
