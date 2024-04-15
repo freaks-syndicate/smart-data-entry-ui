@@ -81,7 +81,12 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
         </Thead>
         <Tbody>
           {receipts.map((receipt) => (
-            <Tr key={receipt.uuid} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
+            <Tr
+              key={receipt.uuid}
+              _hover={{ bg: 'gray.100' }}
+              transition="background 0.3s ease"
+              bgColor={receipt.cancelled ? 'red.100' : ''}
+            >
               <Td>
                 <Link href={`/books/${receiptBookId}/r/${receipt.id}`}>{receipt.receiptNumber}</Link>
               </Td>
