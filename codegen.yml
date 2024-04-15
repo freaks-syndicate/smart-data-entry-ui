@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'https://smart-data-entry-be-service-kcxviwb2yq-el.a.run.app/graphql'
+schema: 'https://smart-data-entry-api-a783534e9c3d.herokuapp.com/graphql'
 documents: 'queries/**/*.ts'
 generates:
   utils/types/generated/graphql.tsx:
