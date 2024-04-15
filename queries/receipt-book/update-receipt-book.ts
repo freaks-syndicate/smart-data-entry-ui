@@ -23,6 +23,7 @@ export const UPDATE_RECEIPT_BOOK = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
       usedReceipts
     }

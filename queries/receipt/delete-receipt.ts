@@ -16,6 +16,7 @@ export const DELETE_RECEIPT = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
     }
   }
 `;

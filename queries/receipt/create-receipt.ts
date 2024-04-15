@@ -16,6 +16,7 @@ export const CREATE_RECEIPT = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
     }
   }
 `;

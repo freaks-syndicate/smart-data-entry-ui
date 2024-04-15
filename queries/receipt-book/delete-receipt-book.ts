@@ -23,6 +23,7 @@ export const DELETE_RECEIPT_BOOK = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
       usedReceipts
     }

@@ -16,6 +16,7 @@ export const UPDATE_RECEIPT = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
       receiptBook {
         id
       }

@@ -24,6 +24,7 @@ export const CREATE_RECEIPT_BOOK = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
     }
   }

@@ -26,6 +26,7 @@ export const GET_RECEIPTS = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
     }
   }
