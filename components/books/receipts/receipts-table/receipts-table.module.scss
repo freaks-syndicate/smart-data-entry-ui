@@ -1,0 +1,8 @@
+.d-container {
+  &__cancelled {
+    a,
+    td {
+      @apply line-through;
+    }
+  }
+}

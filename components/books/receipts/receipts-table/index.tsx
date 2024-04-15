@@ -1,4 +1,5 @@
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react';
+import cx from 'classnames';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
@@ -7,6 +8,8 @@ import { MdDelete } from 'react-icons/md';
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
 import { ClientReceipt } from '@/utils/types';
 import { Receipt, ReceiptBook, ReceiptBookDocument, useDeleteReceiptMutation } from '@/utils/types/generated/graphql';
+
+import styles from './receipts-table.module.scss';
 
 export interface IReceiptsTableProps {
   receiptBookId: ReceiptBook['id'];
@@ -85,7 +88,8 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               key={receipt.uuid}
               _hover={{ bg: 'gray.100' }}
               transition="background 0.3s ease"
-              bgColor={receipt.cancelled ? 'red.100' : ''}
+              bgColor={receipt.cancelled ? 'red.50' : ''}
+              className={receipt.cancelled ? cx(styles['d-container__cancelled']) : ''}
             >
               <Td>
                 <Link href={`/books/${receiptBookId}/r/${receipt.id}`}>{receipt.receiptNumber}</Link>
