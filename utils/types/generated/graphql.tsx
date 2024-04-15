@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -33,6 +32,7 @@ export type CreateReceipt = {
   aadharNumber?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<Scalars['String']['input']>;
   amount: Scalars['Int']['input'];
+  cancelled?: InputMaybe<Scalars['Boolean']['input']>;
   date?: InputMaybe<Scalars['DateTime']['input']>;
   financialYear?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
@@ -232,6 +232,7 @@ export type Receipt = {
   aadharNumber?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   amount: Scalars['Int']['output'];
+  cancelled?: Maybe<Scalars['Boolean']['output']>;
   date?: Maybe<Scalars['DateTime']['output']>;
   financialYear?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
@@ -303,6 +304,7 @@ export type UpdateReceipt = {
   aadharNumber?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<Scalars['String']['input']>;
   amount?: InputMaybe<Scalars['Int']['input']>;
+  cancelled?: InputMaybe<Scalars['Boolean']['input']>;
   date?: InputMaybe<Scalars['DateTime']['input']>;
   financialYear?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
@@ -349,6 +351,7 @@ export type WhereOptionsReceipt = {
   address?: InputMaybe<StringFilterConstraint>;
   amount?: InputMaybe<IntFilterConstraint>;
   and?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptFields>>>;
+  cancelled?: InputMaybe<BooleanFilterConstraint>;
   financialYear?: InputMaybe<StringFilterConstraint>;
   id?: InputMaybe<Scalars['String']['input']>;
   idCode?: InputMaybe<StringFilterConstraint>;
@@ -381,6 +384,7 @@ export type WhereOptionsReceiptBookFields = {
 export type WhereOptionsReceiptFields = {
   address?: InputMaybe<StringFilterConstraint>;
   amount?: InputMaybe<IntFilterConstraint>;
+  cancelled?: InputMaybe<BooleanFilterConstraint>;
   financialYear?: InputMaybe<StringFilterConstraint>;
   id?: InputMaybe<Scalars['String']['input']>;
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
@@ -426,6 +430,7 @@ export type CreateReceiptBookMutation = {
       aadharNumber?: string | null;
       panNumber?: string | null;
       idCode?: IdCode | null;
+      cancelled?: boolean | null;
     } | null> | null;
   } | null;
 };
@@ -460,6 +465,7 @@ export type DeleteReceiptBookMutation = {
       aadharNumber?: string | null;
       panNumber?: string | null;
       idCode?: IdCode | null;
+      cancelled?: boolean | null;
     } | null> | null;
   } | null;
 };
@@ -494,6 +500,7 @@ export type ReceiptBookQuery = {
       aadharNumber?: string | null;
       panNumber?: string | null;
       idCode?: IdCode | null;
+      cancelled?: boolean | null;
     } | null> | null;
   } | null;
 };
@@ -531,6 +538,7 @@ export type ReceiptBooksQuery = {
         aadharNumber?: string | null;
         panNumber?: string | null;
         idCode?: IdCode | null;
+        cancelled?: boolean | null;
       } | null> | null;
     } | null> | null;
     pageInfo?: {
@@ -577,6 +585,7 @@ export type UpdateReceiptBookMutation = {
       aadharNumber?: string | null;
       panNumber?: string | null;
       idCode?: IdCode | null;
+      cancelled?: boolean | null;
     } | null> | null;
   } | null;
 };
@@ -602,6 +611,7 @@ export type CreateReceiptMutation = {
     aadharNumber?: string | null;
     panNumber?: string | null;
     idCode?: IdCode | null;
+    cancelled?: boolean | null;
   } | null;
 };
 
@@ -626,6 +636,7 @@ export type DeleteReceiptMutation = {
     aadharNumber?: string | null;
     panNumber?: string | null;
     idCode?: IdCode | null;
+    cancelled?: boolean | null;
   } | null;
 };
 
@@ -650,6 +661,7 @@ export type ReceiptQuery = {
     aadharNumber?: string | null;
     panNumber?: string | null;
     idCode?: IdCode | null;
+    cancelled?: boolean | null;
   } | null;
 };
 
@@ -670,6 +682,7 @@ export type ReceiptsAllQuery = {
     amount: number;
     aadharNumber?: string | null;
     panNumber?: string | null;
+    cancelled?: boolean | null;
   } | null> | null;
 };
 
@@ -707,6 +720,7 @@ export type ReceiptsQuery = {
       aadharNumber?: string | null;
       panNumber?: string | null;
       idCode?: IdCode | null;
+      cancelled?: boolean | null;
     } | null> | null;
   } | null;
 };
@@ -733,6 +747,7 @@ export type UpdateReceiptMutation = {
     aadharNumber?: string | null;
     panNumber?: string | null;
     idCode?: IdCode | null;
+    cancelled?: boolean | null;
     receiptBook: { __typename?: 'ReceiptBook'; id: string };
   } | null;
 };
@@ -776,6 +791,7 @@ export const CreateReceiptBookDocument = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
     }
   }
@@ -831,6 +847,7 @@ export const DeleteReceiptBookDocument = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
       usedReceipts
     }
@@ -887,6 +904,7 @@ export const ReceiptBookDocument = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
       usedReceipts
     }
@@ -949,6 +967,7 @@ export const ReceiptBooksDocument = gql`
           aadharNumber
           panNumber
           idCode
+          cancelled
         }
         usedReceipts
       }
@@ -1021,6 +1040,7 @@ export const UpdateReceiptBookDocument = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
       usedReceipts
     }
@@ -1071,6 +1091,7 @@ export const CreateReceiptDocument = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
     }
   }
 `;
@@ -1116,6 +1137,7 @@ export const DeleteReceiptDocument = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
     }
   }
 `;
@@ -1161,6 +1183,7 @@ export const ReceiptDocument = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
     }
   }
 `;
@@ -1211,6 +1234,7 @@ export const ReceiptsAllDocument = gql`
       amount
       aadharNumber
       panNumber
+      cancelled
     }
   }
 `;
@@ -1272,6 +1296,7 @@ export const ReceiptsDocument = gql`
         aadharNumber
         panNumber
         idCode
+        cancelled
       }
     }
   }
@@ -1326,6 +1351,7 @@ export const UpdateReceiptDocument = gql`
       aadharNumber
       panNumber
       idCode
+      cancelled
       receiptBook {
         id
       }
