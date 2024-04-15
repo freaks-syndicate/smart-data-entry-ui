@@ -156,10 +156,10 @@ export default function UpdateReceiptBookForm(props: IUpdateReceiptBookFormProps
       </FormControl>
 
       <Stack spacing={4} direction="row" width="100%" justifyContent="flex-end">
-        <Button colorScheme="green" size="md" disabled={loading} onClick={handleUpdateReceiptBookClick}>
+        <Button colorScheme="green" size="md" disabled={loading} onClick={handleUpdateReceiptBookClick} data-cy="update-button">
           Update
         </Button>
-        <Button colorScheme="red" size="md" onClick={reset}>
+        <Button colorScheme="red" size="md" onClick={reset} data-cy="reset-button">
           Reset
         </Button>
       </Stack>

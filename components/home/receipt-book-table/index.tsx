@@ -72,7 +72,9 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
           {receiptBooks.map((receiptBook) => (
             <Tr key={receiptBook.id} _hover={{ bg: 'gray.100' }} transition="background 0.3s ease">
               <Td>
-                <Link href={`/books/${receiptBook.id}`}>{receiptBook.receiptBookNumber}</Link>
+                <Link href={`/books/${receiptBook.id}`} data-cy="receipt-book-link">
+                  {receiptBook.receiptBookNumber}
+                </Link>
               </Td>
               <Td>{receiptBook.receiptSeries}</Td>
               <Td>{receiptBook.totalReceipts}</Td>
@@ -80,12 +82,17 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
               <Td>{receiptBook.financialYear}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <Button colorScheme="green" size={'sm'} onClick={() => handleUpdateReceiptBookClick(receiptBook.id)}>
+                  <Button
+                    colorScheme="green"
+                    size={'sm'}
+                    onClick={() => handleUpdateReceiptBookClick(receiptBook.id)}
+                    data-cy="edit-receipt-book-button"
+                  >
                     <FaEdit />
                   </Button>
 
                   {/* TODO: TBD is delete receipt book needed? */}
-                  {/* <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)}>
+                  {/* <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)} data-cy="delete-receipt-book-button">
                     <MdDelete />
                   </Button> */}
                 </div>

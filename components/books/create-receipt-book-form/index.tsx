@@ -150,10 +150,10 @@ export default function CreateReceiptBookForm(_props: ICreateReceiptBookFormProp
       </FormControl>
 
       <Stack spacing={4} direction="row" width="100%" justifyContent="flex-end">
-        <Button colorScheme="green" size="md" disabled={loading} onClick={handleCreateReceiptBookClick}>
+        <Button colorScheme="green" size="md" disabled={loading} onClick={handleCreateReceiptBookClick} data-cy="save-button">
           Save
         </Button>
-        <Button colorScheme="red" size="md" onClick={reset}>
+        <Button colorScheme="red" size="md" onClick={reset} data-cy="reset-button">
           Reset
         </Button>
       </Stack>

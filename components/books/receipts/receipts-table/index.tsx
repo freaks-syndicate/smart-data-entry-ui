@@ -92,7 +92,9 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               className={receipt.cancelled ? cx(styles['d-container__cancelled']) : ''}
             >
               <Td>
-                <Link href={`/books/${receiptBookId}/r/${receipt.id}`}>{receipt.receiptNumber}</Link>
+                <Link href={`/books/${receiptBookId}/r/${receipt.id}`} data-cy="receipt-link">
+                  {receipt.receiptNumber}
+                </Link>
               </Td>
               <Td>{receipt.date ? new Date(receipt.date).toLocaleDateString('en-US') : '-'}</Td>
               <Td>{receipt.mobileNumber}</Td>
@@ -123,11 +125,16 @@ export default function ReceiptsTable(props: IReceiptsTableProps) {
               <Td>{receipt.panNumber}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <Button colorScheme="green" size={'sm'} onClick={() => handleUpdateReceiptClick(receipt.id)}>
+                  <Button
+                    colorScheme="green"
+                    size={'sm'}
+                    onClick={() => handleUpdateReceiptClick(receipt.id)}
+                    data-cy="edit-receipt-button"
+                  >
                     <FaEdit />
                   </Button>
 
-                  <Button colorScheme="red" size="sm" onClick={() => handleDeleteClick(receipt.id)}>
+                  <Button colorScheme="red" size="sm" onClick={() => handleDeleteClick(receipt.id)} data-cy="delete-receipt-button">
                     <MdDelete />
                   </Button>
                 </div>

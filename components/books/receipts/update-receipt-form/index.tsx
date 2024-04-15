@@ -212,7 +212,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       {/* Mode of Payment */}
       <FormControl position="relative" isInvalid={Boolean(errors.modeOfPayment)}>
         <FormLabel>Mode of Payment</FormLabel>
-        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={ModeOfPayment.Cash} onChange={handleChange}>
+        <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={receipt.modeOfPayment} onChange={handleChange}>
           <option value={ModeOfPayment.Cash}>Cash</option>
           <option value={ModeOfPayment.Cheque}>Cheque</option>
           <option value={ModeOfPayment.Online}>Online</option>
@@ -304,14 +304,15 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
           id="cancelled-receipt-switch"
           isChecked={receiptFormData.cancelled ?? false}
           onChange={handleChange}
+          data-cy="cancelled-switch"
         />
       </FormControl>
 
       <Stack spacing={4} direction="row" width="100%" justifyContent="flex-end">
-        <Button colorScheme="green" size="md" disabled={loading} onClick={handleUpdateReceiptClick}>
+        <Button colorScheme="green" size="md" disabled={loading} onClick={handleUpdateReceiptClick} data-cy="save-button">
           Save
         </Button>
-        <Button colorScheme="red" size="md" onClick={reset}>
+        <Button colorScheme="red" size="md" onClick={reset} data-cy="reset-button">
           Reset
         </Button>
       </Stack>

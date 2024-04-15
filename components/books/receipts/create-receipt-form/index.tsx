@@ -319,6 +319,7 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
           id="cancelled-receipt-switch"
           isChecked={receiptFormData.cancelled ?? false}
           onChange={handleChange}
+          data-cy="cancelled-switch"
         />
       </FormControl>
 

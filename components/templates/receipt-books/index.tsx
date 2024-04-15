@@ -88,7 +88,7 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
         {/* Heading */}
-        <Heading textAlign={'center'} mb={'1rem'}>
+        <Heading textAlign={'center'} mb={'1rem'} data-cy="page-heading">
           {pageTitle}
         </Heading>
 
@@ -101,13 +101,14 @@ export default function ReceiptBooksTemplate(props: IAppProps) {
                 placeholder="Search by Receipt Book Number or Receipt Series"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                data-cy="search-receipt-book"
               />
             ) : (
               <div className="h-10"></div>
             )}
           </Box>
 
-          <Button colorScheme="green" onClick={handleCtaClick} minW={'200'}>
+          <Button colorScheme="green" onClick={handleCtaClick} minW={'200'} data-cy="cta-button">
             {showReceiptBookCreationForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
             <Text ml={'0.5rem'}>{ctaText}</Text>
           </Button>
