@@ -1,0 +1,6 @@
+.d-container {
+  @apply p-3;
+  @screen lg {
+    @apply px-80;
+  }
+}
