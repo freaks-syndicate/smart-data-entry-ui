@@ -2,6 +2,7 @@ import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 
 import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal';
 import { ClientReceiptBook } from '@/utils/types';
@@ -92,9 +93,9 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
                   </Button>
 
                   {/* TODO: TBD is delete receipt book needed? */}
-                  {/* <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)} data-cy="delete-receipt-book-button">
+                  <Button colorScheme="red" size="sm" onClick={() => handleDelete(receiptBook.id)} data-cy="delete-receipt-book-button">
                     <MdDelete />
-                  </Button> */}
+                  </Button>
                 </div>
               </Td>
             </Tr>
