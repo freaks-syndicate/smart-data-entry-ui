@@ -226,7 +226,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       <FormControl position="relative" isInvalid={Boolean(errors.mobileNumber)}>
         <FormLabel>Mobile</FormLabel>
         <Input
-          type="number"
+          type="string"
           name="mobileNumber"
           maxLength={10}
           pattern="^[6-9]\d{9}$"
