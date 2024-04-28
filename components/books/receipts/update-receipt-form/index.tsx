@@ -242,7 +242,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="aadharNumber"
-          placeholder="1234 - 1234 - 1234 - 1234"
+          placeholder="E.g. 123412341234"
           maxLength={12}
           value={receiptFormData.aadharNumber !== null ? receiptFormData.aadharNumber : ''}
           onChange={handleChange}
@@ -257,7 +257,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="panNumber"
-          placeholder="ABCDE1234R"
+          placeholder="E.g. ABCDE1234R"
           maxLength={10}
           value={receiptFormData.panNumber ?? ''}
           onChange={handleChange}
@@ -272,7 +272,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="financialYear"
-          placeholder="2023-2024"
+          placeholder="E.g. 2023-2024"
           value={receiptFormData.financialYear ?? ''}
           onChange={handleChange}
         />
