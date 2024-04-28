@@ -116,7 +116,7 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
           </Box>
 
           <Button colorScheme="green" onClick={handleCtaClick} minW={'200'}>
-            {showReceiptCreationForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
+            {showReceiptCreationForm || showReceiptUpdateForm ? <BsArrowLeft /> : <BsFileEarmarkPlus />}
             <Text ml={'0.5rem'}>{ctaText}</Text>
           </Button>
         </div>
