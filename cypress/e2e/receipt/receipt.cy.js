@@ -12,7 +12,7 @@ describe('Receipt book operations', () => {
   it('Create, search, edit, delete receipt', () => {
     createReceipt(
       '1112221', // receiptBookNumber
-      'LoremIpsum', // name
+      'Lorem Ipsum', // name
       2000, // amount
       'Cheque', // modeOfPayment
       9191919191, // mobile
@@ -22,13 +22,13 @@ describe('Receipt book operations', () => {
       'A 23, Sambhaji Nagar, Pune 411067', // address
     );
 
-    searchReceipt('LoremIpsum');
+    searchReceipt('Lorem Ipsum');
 
-    editReceipt('Doe', 2, 3000, 'Online', 7, 'ABCDE1234G', '2024-2025', 'Pune 411067');
+    editReceipt(' Doe', 2, 3000, 'Online', 7, 'ABCDE1234G', '2024-2025', 'Pune 411067');
 
-    deleteReceipt('LoremIpsumDoe', 'Home');
+    deleteReceipt('Lorem Ipsum Doe');
 
-    //deleteReceiptBook("");
+    deleteReceiptBook('1112221');
   });
 
   after('Logout', () => {

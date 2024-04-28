@@ -1,5 +1,4 @@
-export function deleteReceipt(name, home) {
-  //  cy.get('table tbody tr:first').contains(name);
+export function deleteReceipt(name) {
   cy.get('tbody tr td').each(($el) => {
     if ($el.text().trim() === name) {
       cy.wrap($el).parents('tr').find('button[data-cy="delete-receipt-button"]').click();
