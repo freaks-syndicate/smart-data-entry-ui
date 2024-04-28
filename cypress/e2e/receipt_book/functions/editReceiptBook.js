@@ -1,6 +1,5 @@
 // Define a function to edit a receipt book
 export function editReceiptBook(receiptBookNumber, receiptSeries, totalReceipts, financialYear, oldReceiptBookNumber) {
-  // cy.get('.css-xumdn4').should('have.text', oldReceiptBookNumber).find('button[data-cy="edit-receipt-book-button"]').click();
   cy.get('tbody tr td a[data-cy$="receipt-book-link"]').each(($el) => {
     if ($el.text().trim() === oldReceiptBookNumber) {
       cy.wrap($el).parents('tr').find('button[data-cy="edit-receipt-book-button"]').click(); // find parent and then traverse one level up

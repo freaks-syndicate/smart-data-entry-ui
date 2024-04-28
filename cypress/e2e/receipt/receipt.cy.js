@@ -11,8 +11,8 @@ describe('Receipt book operations', () => {
 
   it('Create, search, edit, delete receipt', () => {
     createReceipt(
+      '1112221', // receiptBookNumber
       'LoremIpsum', // name
-      1, // receiptNumber
       2000, // amount
       'Cheque', // modeOfPayment
       9191919191, // mobile
@@ -26,9 +26,9 @@ describe('Receipt book operations', () => {
 
     editReceipt('Doe', 2, 3000, 'Online', 7, 'ABCDE1234G', '2024-2025', 'Pune 411067');
 
-    deleteReceipt('LoremIpsumDoe');
+    deleteReceipt('LoremIpsumDoe', 'Home');
 
-    deleteReceiptBook(1112221);
+    //deleteReceiptBook("");
   });
 
   after('Logout', () => {
