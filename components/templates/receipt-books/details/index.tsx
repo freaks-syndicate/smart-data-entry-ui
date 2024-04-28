@@ -84,6 +84,11 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
     setReceiptIdToUpdate(receiptId);
   };
 
+  const handleReceiptUpdateCompletion = () => {
+    setShowReceiptCreationForm(false);
+    setShowReceiptUpdateForm(false);
+  };
+
   return (
     <CustomSessionAuth>
       <div className={cx(styles['d-container'])}>
@@ -119,7 +124,11 @@ export default function ReceiptBookDetailsTemplate(props: IReceiptBookDetailsTem
         {showReceiptCreationForm ? (
           <CreateReceiptForm receiptBookId={receiptBook.id} />
         ) : showReceiptUpdateForm ? (
-          <UpdateReceiptForm receipt={receipToUpdate as ClientReceipt} receiptBookId={receiptBook.id} />
+          <UpdateReceiptForm
+            receipt={receipToUpdate as ClientReceipt}
+            receiptBookId={receiptBook.id}
+            onComplete={handleReceiptUpdateCompletion}
+          />
         ) : (
           <ReceiptsTable receiptBookId={receiptBook.id} receipts={nonNullReceipts} handleUpdateReceiptClick={handleUpdateReceiptClick} />
         )}

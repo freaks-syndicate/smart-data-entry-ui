@@ -15,10 +15,11 @@ import styles from './update-receipt-form.module.scss';
 export interface IUpdateReceiptFormProps {
   receipt: ClientReceipt;
   receiptBookId: string;
+  onComplete: () => void;
 }
 
 export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
-  const { receipt, receiptBookId } = props;
+  const { receipt, receiptBookId, onComplete } = props;
 
   const INITIAL_RECEIPT_FORM_DATA: UpdateReceipt = {
     aadharNumber: receipt.aadharNumber,
@@ -61,6 +62,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     });
 
     reset();
+    onComplete();
   };
 
   const handleSpeechClick = (fieldName: string) => {
