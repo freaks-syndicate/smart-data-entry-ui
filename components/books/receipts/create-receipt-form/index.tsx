@@ -48,8 +48,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
 
   const handleCreateReceiptClick = () => {
     const formErrors = validateCreateReceiptFormData(receiptFormData);
+    setErrors(formErrors);
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
       return;
     }
 
