@@ -211,7 +211,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       </FormControl>
 
       {/* Name */}
-      <FormControl position="relative" isInvalid={Boolean(errors.name)}>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.name)}>
         <FormLabel>Name</FormLabel>
         <Input type="text" name="name" value={receiptFormData.name ?? ''} onChange={handleChange} />
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 mt-8 cursor-pointer">{renderSpeechIcon('name')}</div>
@@ -219,7 +219,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       </FormControl>
 
       {/* Receipt Number */}
-      <FormControl position="relative" isInvalid={Boolean(errors.receiptNumber)}>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.receiptNumber)}>
         <FormLabel>Receipt Number</FormLabel>
         <Input
           type="number"
@@ -234,14 +234,14 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       </FormControl>
 
       {/* Amount */}
-      <FormControl position="relative" isInvalid={Boolean(errors.amount)}>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.amount)}>
         <FormLabel>Amount</FormLabel>
         <Input type="number" name="amount" min={1} value={receiptFormData.amount ?? 0} onChange={handleChange} />
         {errors.amount && <FormErrorMessage>{errors.amount}</FormErrorMessage>}
       </FormControl>
 
       {/* Mode of Payment */}
-      <FormControl position="relative" isInvalid={Boolean(errors.modeOfPayment)}>
+      <FormControl position="relative" isRequired isInvalid={Boolean(errors.modeOfPayment)}>
         <FormLabel>Mode of Payment</FormLabel>
         <Select name="modeOfPayment" placeholder="Select mode of payment" defaultValue={receipt.modeOfPayment} onChange={handleChange}>
           <option value={ModeOfPayment.Cash}>Cash</option>
