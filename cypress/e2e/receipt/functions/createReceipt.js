@@ -6,7 +6,7 @@ export function createReceipt(receiptBookNumber, name, amount, modeOfPayment, mo
     }
   });
 
-  cy.get('.css-1p0c83g').should('be.visible').contains(receiptBookNumber); // verify receipt book number
+  cy.get('#receipt-book-number-heading').should('be.visible').contains(receiptBookNumber); // verify receipt book number
 
   cy.get('body').then((body) => {
     if (body.find(".chakra-badge.css-gagmni:contains('BOOK FULL')").length > 0) {

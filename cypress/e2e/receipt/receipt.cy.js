@@ -4,7 +4,7 @@ import { deleteReceipt } from './functions/deleteReceipt';
 import { editReceipt } from './functions/editReceipt';
 import { searchReceipt } from './functions/searchReceipt';
 
-describe('Receipt book operations', () => {
+describe('Receipt operations', () => {
   before('Login with username', () => {
     cy.loginWithUsername(); // Custom command to login
   });
