@@ -28,7 +28,7 @@ export default function ReceiptBookDetailsCard(props: IReceiptBookDetailsCardPro
     >
       {/* Heading */}
       <Flex align="center" justifyContent="space-between">
-        <Box fontSize="3xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+        <Box fontSize="3xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated id="receipt-book-number-heading">
           Receipt Book #{receiptBook.receiptBookNumber}
         </Box>
         <Badge borderRadius="full" px="2" colorScheme="orange" fontSize={'xl'}>
