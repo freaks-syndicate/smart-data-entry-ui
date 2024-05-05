@@ -47,7 +47,6 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   } = useSpeechToText();
   const [updateReceiptMutation, { loading, error: updateReceiptError }] = useUpdateReceiptMutation();
   const [receiptFormData, setReceiptFormData] = useState<UpdateReceipt>(INITIAL_RECEIPT_FORM_DATA);
-  const [realTimeTranscript, setRealTimeTranscript] = useState('');
   const [activeField, setActiveField] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -66,9 +65,25 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   };
 
   const handleSpeechClick = (fieldName: string) => {
-    setRealTimeTranscript('');
-    setActiveField(fieldName);
-    isListening ? stopListening() : startListening();
+    if (isListening) {
+      if (activeField === fieldName) {
+        stopListening(); // Stop listening if the current active field's mic icon is clicked
+      } else {
+        // If another field's mic icon is clicked, switch the active field
+        setActiveField(fieldName);
+        // No need to call stopListening or startListening since it's already listening
+      }
+    } else {
+      // if (fieldName === 'name' || fieldName === 'address') {
+      //   setSpeechLanguage('mr-IN');
+      // } else {
+      //   setSpeechLanguage('en-US');
+      // }
+      // FIXME: Setting english as the default language for now
+      setSpeechLanguage('en-US');
+      startListening();
+      setActiveField(fieldName); // Set the new active field and start listening
+    }
   };
 
   const reset = () => {
@@ -84,8 +99,8 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
 
   const handleUpdateReceiptClick = () => {
     const formErrors = validateCreateReceiptFormData(receiptFormData);
+    setErrors(formErrors);
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
       return;
     }
 
@@ -117,21 +132,27 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
   };
 
   useEffect(() => {
-    if (activeField === 'name' || activeField === 'address') {
-      setSpeechLanguage('mr-IN');
-    } else {
-      setSpeechLanguage('en-US');
-    }
-    // Update the real-time transcript display while listening
     if (isListening && activeField !== null) {
-      setRealTimeTranscript(transcript);
-      setReceiptFormData((prev) => ({ ...prev, [activeField]: realTimeTranscript }));
-    }
-  }, [transcript, isListening, realTimeTranscript, activeField, setSpeechLanguage, setReceiptFormData]);
+      // Determine the type of the active field for validation
+      let fieldType = 'text';
+      if (activeField === 'receiptNumber' || activeField === 'amount') {
+        fieldType = 'number';
+      } else if (activeField === 'date') {
+        fieldType = 'date';
+      }
 
-  useEffect(() => {
-    setRealTimeTranscript('');
-  }, [activeField]);
+      setReceiptFormData((prevFormData) => {
+        // Use the utility function to create a new state
+        const updatedFormData = updateFormData(prevFormData, activeField as keyof UpdateReceipt, transcript, fieldType);
+        // Only update the state if there's an actual change
+        // @ts-expect-error no string index signature
+        if (JSON.stringify(prevFormData[activeField]) !== JSON.stringify(updatedFormData[activeField])) {
+          return updatedFormData;
+        }
+        return prevFormData;
+      });
+    }
+  }, [transcript, isListening, activeField]);
 
   // TODO: Check if this can be applied at the root level
   useEffect(() => {
@@ -162,6 +183,14 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       setReceiptFormData((prev) => updateFormData<UpdateReceipt>(prev, name, value, type));
     }
   };
+
+  useEffect(
+    () => () => {
+      stopListening();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   if (updateReceiptError) {
     console.error(updateReceiptError);
