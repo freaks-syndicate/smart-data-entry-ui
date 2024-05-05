@@ -27,6 +27,11 @@ export const validateCreateReceiptBookFormData = (data: CreateReceiptBook | Upda
 export const validateCreateReceiptFormData = (data: CreateReceipt | UpdateReceipt): { [key: string]: string } => {
   const errors: { [key: string]: string } = {};
 
+  // Ensure that name field is not empty
+  if (data.name === null || data.name === undefined || data.name.trim() === '') {
+    errors.name = 'Name is required';
+  }
+
   // Ensure the receipt number is a positive number
   if (data.receiptNumber !== null && data.receiptNumber !== undefined && data.receiptNumber <= 0) {
     errors.receiptNumber = 'Receipt number must be greater than 0';
