@@ -13,6 +13,7 @@ describe('Receipt operations', () => {
     createReceipt(
       '1112221', // receiptBookNumber
       'Lorem Ipsum', // name
+      11, // receiptNumber
       2000, // amount
       'Cheque', // modeOfPayment
       9191919191, // mobile

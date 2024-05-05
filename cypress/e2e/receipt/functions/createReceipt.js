@@ -1,4 +1,15 @@
-export function createReceipt(receiptBookNumber, name, amount, modeOfPayment, mobile, aadharNumber, panNumber, year, address) {
+export function createReceipt(
+  receiptBookNumber,
+  name,
+  receiptNumber,
+  amount,
+  modeOfPayment,
+  mobile,
+  aadharNumber,
+  panNumber,
+  year,
+  address,
+) {
   // open receipt book
   cy.get('tbody tr td a[data-cy$="receipt-book-link"]').each(($el) => {
     if ($el.text().trim() === receiptBookNumber) {
@@ -19,6 +30,8 @@ export function createReceipt(receiptBookNumber, name, amount, modeOfPayment, mo
   });
 
   cy.get("input[name='name']").type(name);
+
+  cy.get("input[name='receiptNumber']").type(receiptNumber);
 
   cy.get("input[name='amount']").type(amount);
 
