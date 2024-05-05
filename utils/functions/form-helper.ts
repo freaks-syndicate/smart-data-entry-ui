@@ -52,13 +52,21 @@ const handleDateInput = <T>(formData: T, fieldName: keyof T, value: string): T =
 };
 
 const handleTextInput = <T>(formData: T, fieldName: keyof T, value: string): T => {
-  let trimmedValue = value.trim();
+  let transformedValue = value;
+  const trimmedValue = value.trim();
+  const charLimits = {
+    panNumber: 10,
+    aadharNumber: 12,
+    mobileNumber: 10,
+  };
+  const limit = charLimits[fieldName as keyof typeof charLimits];
+
   if (fieldName === 'panNumber') {
     // For PAN number, convert to uppercase and remove all spaces
-    trimmedValue = toUpper(trimmedValue.replace(/\s+/g, ''));
+    transformedValue = toUpper(trimmedValue.replace(/\s+/g, '').slice(0, limit));
   } else if (fieldName === 'mobileNumber' || fieldName === 'aadharNumber') {
     // For mobile and Aadhar numbers, remove all non-digit characters and spaces
-    trimmedValue = trimmedValue.replace(/\D+/g, '');
+    transformedValue = trimmedValue.replace(/\D+/g, '').slice(0, limit);
   }
-  return { ...formData, [fieldName]: trimmedValue } as T;
+  return { ...formData, [fieldName]: transformedValue } as T;
 };

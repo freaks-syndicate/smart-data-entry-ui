@@ -48,8 +48,8 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
 
   const handleCreateReceiptClick = () => {
     const formErrors = validateCreateReceiptFormData(receiptFormData);
+    setErrors(formErrors);
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
       return;
     }
 
@@ -95,17 +95,25 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
   useEffect(() => {
     if (isListening && activeField !== null) {
       // Determine the type of the active field for validation
-      let fieldType = 'text'; // Default to text if not a special case
+      let fieldType = 'text';
       if (activeField === 'receiptNumber' || activeField === 'amount') {
         fieldType = 'number';
       } else if (activeField === 'date') {
         fieldType = 'date';
       }
-      // Use the utility function to update the form data with validation
-      const updatedFormData = updateFormData(receiptFormData, activeField as keyof CreateReceipt, transcript, fieldType);
-      setReceiptFormData(updatedFormData);
+
+      setReceiptFormData((prevFormData) => {
+        // Use the utility function to create a new state
+        const updatedFormData = updateFormData(prevFormData, activeField as keyof CreateReceipt, transcript, fieldType);
+        // Only update the state if there's an actual change
+        // @ts-expect-error no string index signature
+        if (JSON.stringify(prevFormData[activeField]) !== JSON.stringify(updatedFormData[activeField])) {
+          return updatedFormData;
+        }
+        return prevFormData;
+      });
     }
-  }, [transcript, isListening, activeField, receiptFormData]);
+  }, [transcript, isListening, activeField]);
 
   useEffect(() => {
     const numberInputs = document.querySelectorAll('input[type=number]');
@@ -159,11 +167,13 @@ export default function CreateReceiptForm(props: ICreateReceiptFormProps) {
         // No need to call stopListening or startListening since it's already listening
       }
     } else {
-      if (fieldName === 'name' || fieldName === 'address') {
-        setSpeechLanguage('mr-IN');
-      } else {
-        setSpeechLanguage('en-US');
-      }
+      // if (fieldName === 'name' || fieldName === 'address') {
+      //   setSpeechLanguage('mr-IN');
+      // } else {
+      //   setSpeechLanguage('en-US');
+      // }
+      // FIXME: Setting english as the default language for now
+      setSpeechLanguage('en-US');
       startListening();
       setActiveField(fieldName); // Set the new active field and start listening
     }

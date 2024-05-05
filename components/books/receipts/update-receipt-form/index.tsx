@@ -15,10 +15,11 @@ import styles from './update-receipt-form.module.scss';
 export interface IUpdateReceiptFormProps {
   receipt: ClientReceipt;
   receiptBookId: string;
+  onComplete: () => void;
 }
 
 export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
-  const { receipt, receiptBookId } = props;
+  const { receipt, receiptBookId, onComplete } = props;
 
   const INITIAL_RECEIPT_FORM_DATA: UpdateReceipt = {
     aadharNumber: receipt.aadharNumber,
@@ -61,6 +62,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
     });
 
     reset();
+    onComplete();
   };
 
   const handleSpeechClick = (fieldName: string) => {
@@ -224,7 +226,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
       <FormControl position="relative" isInvalid={Boolean(errors.mobileNumber)}>
         <FormLabel>Mobile</FormLabel>
         <Input
-          type="number"
+          type="string"
           name="mobileNumber"
           maxLength={10}
           pattern="^[6-9]\d{9}$"
@@ -242,7 +244,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="aadharNumber"
-          placeholder="1234 - 1234 - 1234 - 1234"
+          placeholder="E.g. 123412341234"
           maxLength={12}
           value={receiptFormData.aadharNumber !== null ? receiptFormData.aadharNumber : ''}
           onChange={handleChange}
@@ -257,7 +259,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="panNumber"
-          placeholder="ABCDE1234R"
+          placeholder="E.g. ABCDE1234R"
           maxLength={10}
           value={receiptFormData.panNumber ?? ''}
           onChange={handleChange}
@@ -272,7 +274,7 @@ export default function UpdateReceiptForm(props: IUpdateReceiptFormProps) {
         <Input
           type="string"
           name="financialYear"
-          placeholder="2023-2024"
+          placeholder="E.g. 2023-2024"
           value={receiptFormData.financialYear ?? ''}
           onChange={handleChange}
         />
