@@ -49,7 +49,7 @@ export function createReceipt(
 
   cy.get('.chakra-button.css-h211ee').click();
 
-  cy.get('#toast-1-title').should('have.text', 'Receipt Created'); // Verify the success toast message
+  cy.get('#toast-2-title').should('have.text', 'Receipt Created'); // Verify the success toast message
 
   cy.get('.chakra-button.css-1ur5r0m').click(); // click on back to receipts
 
