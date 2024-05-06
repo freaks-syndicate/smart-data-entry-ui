@@ -8,11 +8,11 @@ describe('Receipt book and receipt operations', () => {
 
   // receipt book operations
   it('should create a receipt book', () => {
-    createReceiptBook(111222, 1, 5, '2023-2024'); // Arguments are receiptBookNumber, receiptSeriesNumber, totalReceipts, financialYear
+    createReceiptBook('111222', 1, 5, '2023-2024'); // Arguments are receiptBookNumber, receiptSeriesNumber, totalReceipts, financialYear
   });
 
   it('should search for a receipt book by number', () => {
-    searchReceiptBook(111222); // Argument is receiptBookNumber
+    searchReceiptBook('111222'); // Argument is receiptBookNumber
   });
 
   it('should edit a receipt book', () => {
@@ -65,7 +65,7 @@ describe('Receipt book and receipt operations', () => {
   });
 
   it('should delete a receipt book', () => {
-    deleteReceiptBook(1112221); // Argument is newReceiptBookNumber
+    deleteReceiptBook('1112221'); // Argument is newReceiptBookNumber
   });
 
   after('Logout', () => {
