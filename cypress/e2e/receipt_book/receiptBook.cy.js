@@ -1,11 +1,5 @@
-import { createReceiptBook } from './functions/createReceiptBook';
-import { editReceiptBook } from './functions/editReceiptBook';
-import { searchReceiptBook } from './functions/searchReceiptBook';
-import { deleteReceiptBook } from './functions/deleteReceiptBook';
-import { createReceipt } from './functions/createReceipt';
-import { deleteReceipt } from './functions/deleteReceipt';
-import { editReceipt } from './functions/editReceipt';
-import { searchReceipt } from './functions/searchReceipt';
+import { createReceiptBook, editReceiptBook, searchReceiptBook, deleteReceiptBook } from './functions/receiptBookOperations';
+import { createReceipt, deleteReceipt, editReceipt, searchReceipt } from './functions/receiptOperations';
 
 describe('Receipt book and receipt operations', () => {
   before('Login with username', () => {
