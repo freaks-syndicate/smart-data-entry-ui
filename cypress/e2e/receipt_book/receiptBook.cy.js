@@ -49,7 +49,7 @@ describe('Receipt book and receipt operations', () => {
     editReceipt(
       '1112221', // newReceiptBookNumber
       '11', // receiptNumber
-      'Lorem Ipsum Doe', // newName
+      ' Doe', // newName
       2, // newReceiptNumber
       3000, // newAmount
       'Online', // newModeOfPayment
