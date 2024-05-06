@@ -18,29 +18,27 @@ export function createReceiptBook(receiptBookNumber, receiptSeriesNumber, totalR
 }
 
 // Define a function to search a receipt book
-export function searchReceiptBook(searchReceiptBook) {
-  cy.reload(); // Search by receipt book number or series in the search input
+export function searchReceiptBook(receiptBookNumber) {
+  cy.get('.chakra-input.css-1cjy4zv').type(receiptBookNumber);
 
-  cy.get('.chakra-input.css-1cjy4zv').type(searchReceiptBook);
-
-  cy.get('.css-xumdn4').contains(searchReceiptBook); // Assert that the search results contain the number 1
+  cy.get('.css-xumdn4').contains(receiptBookNumber); // Assert that the search results contain the desired number
 }
 
 // Define a function to edit a receipt book
-export function editReceiptBook(receiptBookNumber, receiptSeries, totalReceipts, financialYear, oldReceiptBookNumber) {
+export function editReceiptBook(newReceiptBookNumber, newReceiptSeries, newTotalReceipts, newFinancialYear, oldReceiptBookNumber) {
   cy.get('tbody tr td a[data-cy$="receipt-book-link"]').each(($el) => {
     if ($el.text().trim() === oldReceiptBookNumber) {
       cy.wrap($el).parents('tr').find('button[data-cy="edit-receipt-book-button"]').click(); // find parent and then traverse one level up
     }
   });
 
-  cy.get("input[name='receiptBookNumber']").type(receiptBookNumber); // Update the receipt book number
+  cy.get("input[name='receiptBookNumber']").type(newReceiptBookNumber); // Update the receipt book number
 
-  cy.get("input[name='receiptSeries']").type(receiptSeries); // Update the receipt series number
+  cy.get("input[name='receiptSeries']").type(newReceiptSeries); // Update the receipt series number
 
-  cy.get("input[name='totalReceipts']").type(totalReceipts); // Update the total number of receipts
+  cy.get("input[name='totalReceipts']").type(newTotalReceipts); // Update the total number of receipts
 
-  cy.get("input[name='financialYear']").clear().type(financialYear); // Update the financial year
+  cy.get("input[name='financialYear']").clear().type(newFinancialYear); // Update the financial year
 
   cy.get("button[class='chakra-button css-h211ee']").click(); // Submit the updated details
 
@@ -50,14 +48,14 @@ export function editReceiptBook(receiptBookNumber, receiptSeries, totalReceipts,
 }
 
 // Define a function to delete a receipt book
-export function deleteReceiptBook(receiptBookNumber) {
+export function deleteReceiptBook(newReceiptBookNumber) {
   cy.get('tbody tr td').each(($el) => {
-    if ($el.text().trim() === receiptBookNumber) {
+    if ($el.text().trim() === newReceiptBookNumber) {
       cy.wrap($el).parents('tr').find('button[data-cy="delete-receipt-book-button"]').click();
     }
   });
 
   cy.get("button[class='chakra-button css-f2hjvb']").click();
 
-  cy.get('#toast-3-title').should('have.text', 'Receipt Book Deleted');
+  cy.get('#toast-1-title').should('have.text', 'Receipt Deleted');
 }
