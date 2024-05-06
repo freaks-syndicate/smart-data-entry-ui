@@ -59,5 +59,5 @@ export function deleteReceiptBook(receiptBookNumber) {
 
   cy.get("button[class='chakra-button css-f2hjvb']").click();
 
-  cy.get('#toast-3-title').should('have.text', 'Receipt Deleted');
+  cy.get('#toast-3-title').should('have.text', 'Receipt Book Deleted');
 }
