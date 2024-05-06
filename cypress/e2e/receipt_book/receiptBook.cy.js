@@ -64,8 +64,8 @@ describe('Receipt book and receipt operations', () => {
     deleteReceipt('Lorem Ipsum Doe', '1112221'); // Argument is newName, newReceiptBookNumber
   });
 
-  it.only('should delete a receipt book', () => {
-    deleteReceiptBook('1112221'); // Argument is newReceiptBookNumber
+  it('should delete a receipt book', () => {
+    deleteReceiptBook(1112221); // Argument is newReceiptBookNumber
   });
 
   after('Logout', () => {
