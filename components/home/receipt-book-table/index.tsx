@@ -28,7 +28,7 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
 
   const handleDeleteReceiptBookCompletion = () => {
     toast({
-      title: 'Receipt Deleted',
+      title: 'Receipt Book Deleted',
       description: 'Receipt succesfully deleted.',
       status: 'success',
       duration: 5000,
