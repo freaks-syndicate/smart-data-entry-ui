@@ -98,7 +98,7 @@ export function editReceipt(
     }
   });
 
-  cy.get("input[name='name']").type(newName);
+  cy.get("input[name='name']").clear().type(newName);
 
   cy.get("input[name='receiptNumber']").type('{selectall}').type(newReceiptNumber);
 

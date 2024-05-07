@@ -32,7 +32,7 @@ export function editReceiptBook(newReceiptBookNumber, newReceiptSeries, newTotal
     }
   });
 
-  cy.get("input[name='receiptBookNumber']").type(newReceiptBookNumber); // Update the receipt book number
+  cy.get("input[name='receiptBookNumber']").type('{selectall}').type(newReceiptBookNumber); // Update the receipt book number
 
   cy.get("input[name='receiptSeries']").type(newReceiptSeries); // Update the receipt series number
 
