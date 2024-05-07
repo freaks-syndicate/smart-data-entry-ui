@@ -1,7 +1,13 @@
-
 {
-  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "next"],
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "prettier",
+    "next",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:cypress/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "simple-import-sort", "cypress"],
   "rules": {
     "no-console": ["warn", { "allow": ["info", "error"] }],
     "quotes": ["error", "single"],
@@ -19,5 +25,10 @@
       }
     ],
     "@typescript-eslint/no-empty-interface": "off"
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "mocha": true
   }
 }
