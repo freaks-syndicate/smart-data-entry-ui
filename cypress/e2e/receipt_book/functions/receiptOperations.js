@@ -47,7 +47,7 @@ export function createReceipt(
 
   cy.get('.chakra-button.css-h211ee').click();
 
-  cy.get('#toast-1-title').should('have.text', 'Receipt Created'); // Verify the success toast message
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Created'); // Verify the success toast message
 
   cy.get('.chakra-button.css-1ur5r0m').click(); // click on back to receipts
 
@@ -116,7 +116,7 @@ export function editReceipt(
 
   cy.get('.chakra-button.css-h211ee').click();
 
-  cy.get('#toast-1-title').should('be.visible').and('have.text', 'Receipt Updated'); // Verify the success toast message
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Updated'); // Verify the success toast message
 }
 
 //Define a function to delete a receipt
@@ -135,7 +135,7 @@ export function deleteReceipt(newName, newReceiptBookNumber) {
 
   cy.contains('button', 'Yes').click();
 
-  cy.get('#toast-1-title').should('have.text', 'Receipt Deleted');
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Deleted');
 
   cy.get(
     "a[class='block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500']",

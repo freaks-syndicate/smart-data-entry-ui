@@ -12,7 +12,7 @@ export function createReceiptBook(receiptBookNumber, receiptSeriesNumber, totalR
 
   cy.get("button[class='chakra-button css-h211ee']").click(); // Click the submit button to create receipt book
 
-  cy.get('#toast-1-title').should('have.text', 'Receipt Book Created'); // Verify the success toast message
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Book Created'); // Verify the success toast message
 
   cy.get("button[class='chakra-button css-1ur5r0m']").click(); // Click the back to receipt books button
 }
@@ -42,7 +42,7 @@ export function editReceiptBook(newReceiptBookNumber, newReceiptSeries, newTotal
 
   cy.get("button[class='chakra-button css-h211ee']").click(); // Submit the updated details
 
-  cy.get('#toast-1-title').should('be.visible').contains('Receipt Book Updated'); // Verify the success toast message for update
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Book Updated'); // Verify the success toast message for update
 
   cy.get("button[class='chakra-button css-1ur5r0m']").click(); // Return to the receipt books list
 }
@@ -57,5 +57,5 @@ export function deleteReceiptBook(newReceiptBookNumber) {
 
   cy.get("button[class='chakra-button css-f2hjvb']").click();
 
-  cy.get('#toast-1-title').should('have.text', 'Receipt Book Deleted');
+  cy.get('div[data-status="success"]').should('be.visible').contains('Receipt Book Deleted');
 }
