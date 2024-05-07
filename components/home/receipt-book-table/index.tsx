@@ -21,7 +21,6 @@ export default function ReceiptBookTable(props: IReceiptBookTableProps) {
 
   const [deleteReceiptBookMutation, { loading, error }] = useDeleteReceiptBookMutation();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDelete = (receiptBookId: ClientReceiptBook['id']) => {
     setRecordToDelete(receiptBookId);
   };

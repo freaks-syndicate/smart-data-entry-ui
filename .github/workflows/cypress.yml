@@ -1,0 +1,31 @@
+name: Cypress Tests
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          browser: chrome
+        env:
+          CYPRESS_EMAIL: ${{secrets.CYPRESS_EMAIL}}
+          CYPRESS_PASSWORD: ${{secrets.CYPRESS_PASSWORD}}
